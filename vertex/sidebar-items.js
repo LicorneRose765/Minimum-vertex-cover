@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["branch_and_bound","naive_search","run_algorithm"],"mod":["errors","graph_utils","mvcgraph"],"struct":["Clock","ElapseTime","MVCResult"]};

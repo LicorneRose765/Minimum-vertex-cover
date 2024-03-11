@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_graph_to_yaml","add_time_to_yaml","complement","copy_graph","get_optimal_value","get_time_data","get_vertex_with_max_degree","graph_to_string","is_clique","is_independent_set","is_optimal_value","is_vertex_cover","load_clq_file","update_mvc_value"],"struct":["GraphInfo","YamlTime"]};
