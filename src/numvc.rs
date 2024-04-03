@@ -1,10 +1,10 @@
 use petgraph::prelude::UnGraphMap;
 
 use crate::Clock;
-use crate::graph_utils::is_vertex_cover;
 
 // TODO: Maybe use a function which take a grave without weights and returns a graph with weights
 // To use it here.
+#[allow(dead_code)]
 pub fn numvc(
     graph: &UnGraphMap<u64, i32>, // Use u64 as edge weights
     clock: &mut Clock

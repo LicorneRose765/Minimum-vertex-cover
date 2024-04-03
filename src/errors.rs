@@ -23,11 +23,7 @@ impl fmt::Display for ClockError {
     }
 }
 
-impl Error for ClockError {
-    fn description(&self) -> &str {
-        &self.message
-    }
-}
+impl Error for ClockError {}
 
 #[derive(Debug)]
 pub struct InvalidClqFileFormat {
@@ -48,11 +44,7 @@ impl fmt::Display for InvalidClqFileFormat {
     }
 }
 
-impl Error for InvalidClqFileFormat {
-    fn description(&self) -> &str {
-        &self.message
-    }
-}
+impl Error for InvalidClqFileFormat {}
 
 impl From<io::Error> for InvalidClqFileFormat {
     fn from(err: io::Error) -> Self {
@@ -100,16 +92,7 @@ impl fmt::Debug for YamlError {
     }
 }
 
-impl Error for YamlError {
-    fn description(&self) -> &str {
-        match self {
-            YamlError::IoError(msg, _err) => msg,
-            YamlError::NotFound(msg, _err) => msg,
-            YamlError::YAMLParsingError(msg, _err) => msg,
-            YamlError::YAMLFormatError(msg, _err) => msg,
-        }
-    }
-}
+impl Error for YamlError {}
 
 impl From<serde_yaml::Error> for YamlError {
     fn from(err: serde_yaml::Error) -> Self {
@@ -123,5 +106,97 @@ impl From<io::Error> for YamlError {
     }
 }
 
+#[cfg(test)]
+mod errors_test {
+    use serde::de::Error;
+    use crate::errors::{InvalidClqFileFormat, YamlError};
+
+    #[test]
+    fn test_clock_error() {
+        use super::ClockError;
+        let err = ClockError::new("Error in clock");
+        assert_eq!(err.message, "Error in clock");
+        assert_eq!(err.to_string(), "Error in clock");
+    }
 
 
+    #[test]
+    fn test_invalid_clq_file_format() {
+        use super::InvalidClqFileFormat;
+        let err = InvalidClqFileFormat::new("Error in clq file format");
+        assert_eq!(err.message, "Error in clq file format");
+        assert_eq!(err.to_string(), "Error in clq file format");
+    }
+
+    #[test]
+    fn test_clq_format_from_io_error() {
+        let err = InvalidClqFileFormat::from(
+            std::io::Error::new(std::io::ErrorKind::Other, "Error")
+        );
+        assert_eq!(err.message, "Error");
+        assert_eq!(err.to_string(), "Error");
+    }
+
+    #[test]
+    fn test_clq_format_from_parse_int() {
+        // Parse integer from empty string
+        let err = InvalidClqFileFormat::from(
+            i32::from_str_radix("", 10).unwrap_err()
+        );
+        assert_eq!(err.message, "cannot parse integer from empty string");
+        assert_eq!(err.to_string(), "cannot parse integer from empty string");
+    }
+
+    #[test]
+    fn test_yaml_io_error() {
+        let io_err = std::io::Error::new(std::io::ErrorKind::Other, "Error");
+        let err = YamlError::IoError("Error in opening file".to_string(), io_err);
+        assert_eq!(err.to_string(), "Error in opening file");
+        let io_err = std::io::Error::new(std::io::ErrorKind::Other, "Error");
+        assert_eq!(format!("{:?}", err), format!("Error in opening file:\n {:?}", io_err));
+    }
+
+    #[test]
+    fn test_yaml_io_error_from_io_error() {
+        let io_err = std::io::Error::new(std::io::ErrorKind::Other, "Error");
+        let err = YamlError::from(io_err);
+        assert_eq!(err.to_string(), "Error while creating / opening file");
+        let io_err = std::io::Error::new(std::io::ErrorKind::Other, "Error");
+        assert_eq!(format!("{:?}", err), format!("Error while creating / opening file:\n {:?}", io_err));
+    }
+
+    #[test]
+    fn test_yaml_not_found_error() {
+        let err = YamlError::NotFound("Object not found".to_string(), "Object".to_string());
+        assert_eq!(err.to_string(), "Object not found");
+        assert_eq!(format!("{:?}", err), "Object not found:\n \"Object\"");
+    }
+
+    #[test]
+    fn test_yaml_parsing_error() {
+        let yaml_err = serde_yaml::Error::custom("Error");
+        let err = YamlError::YAMLParsingError("Error parsing YAML".to_string(), yaml_err);
+        assert_eq!(err.to_string(), "Error parsing YAML.");
+        let yaml_err = serde_yaml::Error::custom("Error");
+        assert_eq!(format!("{:?}", err), format!("Error parsing YAML:\n {:?}", yaml_err));
+    }
+
+    #[test]
+    fn test_yaml_parsing_error_from_yaml_error() {
+        let yaml_err = serde_yaml::Error::custom("Error");
+        let err = YamlError::from(yaml_err);
+        assert_eq!(err.to_string(), "Error parsing YAML file.");
+        let yaml_err = serde_yaml::Error::custom("Error");
+        assert_eq!(format!("{:?}", err), format!("Error parsing YAML file:\n {:?}", yaml_err));
+    }
+
+    #[test]
+    fn test_yaml_format_error() {
+        let yaml_err = serde_yaml::Error::custom("Error");
+        let err = YamlError::YAMLFormatError("Error in YAML format".to_string(), yaml_err);
+        assert_eq!(err.to_string(), "Error in YAML format.");
+        let yaml_err = serde_yaml::Error::custom("Error");
+        assert_eq!(format!("{:?}", err), format!("Error in YAML format:\n {:?}", yaml_err));
+    }
+
+}

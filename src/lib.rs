@@ -443,4 +443,26 @@ mod algorithms_tests {
         let expected_vertex_cover = 2;
         assert_eq!(naive_search(&graph, &mut Clock::new(3600)).0, expected_vertex_cover);
     }
+
+    #[test]
+    fn test_naive_on_empty_graph() {
+        let graph = Box::new(UnGraphMap::<u64, ()>::new());
+        assert_eq!(naive_search(&graph, &mut Clock::new(3600)).0, 0);
+    }
+
+    #[test]
+    fn test_naive_time_up() {
+        let mut graph = Box::new(UnGraphMap::<u64, ()>::new());
+        for i in 0..4 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(1, 2, ());
+        graph.add_edge(2, 0, ());
+        graph.add_edge(2, 3, ());
+
+        let clock = &mut Clock::new(0);
+        assert_eq!(naive_search(&graph, clock).0, 0);
+        assert!(clock.is_time_up());
+    }
 }
