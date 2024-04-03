@@ -15,6 +15,7 @@ pub mod graph_utils;
 mod branch_and_bound;
 pub mod mvcgraph;
 pub mod errors;
+mod numvc;
 
 /// Naïve algorithm that searches for the minimum vertex cover of a given graph.
 ///
