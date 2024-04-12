@@ -1,8 +1,3 @@
-# This file contains the values of the MVC for a list of graphs. (mainly DIMACS)
-# These values are just the results of the BnB algorithm presented in this repository.
-# Thus, some of the values may not be optimal (but should be)
-# and some values on large graphs are still not computed yet; (=0)
-
 - id: myciel3.clq
   format: col
   order: 11

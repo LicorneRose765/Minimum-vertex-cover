@@ -35,50 +35,86 @@ pub fn numvc_algorithm(
     let mut confchange: Vec<u64> = vec![1; graph.node_count()];
 
     // Construct the first solution greedily by selecting the vertex with the highest dscore
+    clock.enter_subroutine("greedy_vc");
     compute_greedy_vc(graph, &mut solution, &mut solution_age, &iter, &mut dscores);
+    clock.exit_subroutine("greedy_vc").expect("Subroutine not found");
     let mut best_solution = solution.clone();
 
+    clock.enter_subroutine("main");
     // Main loop
     while !clock.is_time_up() {
         if is_vertex_cover_with_weight(graph, &solution_age) {
             best_solution = solution.clone();
             if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {
                 // We found the optimal solution
+                println!("Found optimal solution with {} iterations", iter);
                 break;
             }
+
             // Remove a vertex with highest dscore from C
-            let v = get_vertex_with_highest_dscore_from_solution(&mut dscores, &mut solution, &solution_age);
+            clock.enter_subroutine("dscore_update");
+            update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
+            clock.exit_subroutine("dscore_update").expect("Subroutine not found");
+            clock.enter_subroutine("get_vertex_with_highest_dscore_from_solution");
+            let v = get_vertex_with_highest_dscore_from_solution(&dscores, &solution, &solution_age);
+            clock.exit_subroutine("get_vertex_with_highest_dscore_from_solution").expect("Subroutine not found");
+            clock.enter_subroutine("retain");
             solution.retain(|&x| x != v);
+            clock.exit_subroutine("retain").expect("Subroutine not found");
             solution_age[v as usize] = -iter; // Set age to negative time since it was removed
-            update_dscores(graph, &mut solution_age, &mut dscores);
+
+            iter += 1;
             continue
         }
         // Select a vertex from c with the highest dscore
-        let u = get_vertex_with_highest_dscore_from_solution(&mut dscores, &mut solution, &solution_age);
+        clock.enter_subroutine("dscore_update");
+        update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
+        clock.exit_subroutine("dscore_update").expect("Subroutine not found");
+        clock.enter_subroutine("get_vertex_with_highest_dscore_from_solution");
+        let u = get_vertex_with_highest_dscore_from_solution(&dscores, &solution, &solution_age);
+        clock.exit_subroutine("get_vertex_with_highest_dscore_from_solution").expect("Subroutine not found");
         // Remove u from C
+        clock.enter_subroutine("retain");
         solution.retain(|&x| x != u);
+        clock.exit_subroutine("retain").expect("Subroutine not found");
         solution_age[u as usize] = -iter;
+        clock.enter_subroutine("update_confchange");
         update_confchange(graph, u, &mut confchange, true);
+        clock.exit_subroutine("update_confchange").expect("Subroutine not found");
 
+
+        clock.enter_subroutine("update_dscores");
+        update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
+        clock.exit_subroutine("update_dscores").expect("Subroutine not found");
         // Select a vertex to add
+        clock.enter_subroutine("pick_new_vertex");
         let v = pick_new_vertex(graph, &dscores, &confchange, &solution_age);
+        clock.exit_subroutine("pick_new_vertex").expect("Subroutine not found");
 
         // Add v to C
+        clock.enter_subroutine("retain");
         solution.push(v);
+        clock.exit_subroutine("retain").expect("Subroutine not found");
         solution_age[v as usize] = iter;
+        clock.enter_subroutine("update_confchange");
         update_confchange(graph, v, &mut confchange, false);
+        clock.exit_subroutine("update_confchange").expect("Subroutine not found");
 
-
+        clock.enter_subroutine("update_weights");
         update_weights(graph, &solution_age);
+        clock.exit_subroutine("update_weights").expect("Subroutine not found");
 
+        clock.enter_subroutine("mean");
         let mean = compute_mean_weight(graph);
         if mean >= threshold {
             reduce_weights(graph, rho);
         }
+        clock.exit_subroutine("mean").expect("Subroutine not found");
 
         iter += 1;
     }
-
+    clock.exit_subroutine("main").expect("Subroutine not found");
+    println!("Number of iterations : {}", iter);
     return best_solution;
 }
 
@@ -135,7 +171,6 @@ fn get_cost(
 ) -> i32 {
     let mut cost = 0;
     for (a, b, w) in graph.all_edges() {
-        // TODO: modify this to use solution_age
         if solution_age[a as usize] <= 0 && solution_age[b as usize] <= 0 {
             cost += w;
         }
@@ -398,7 +433,7 @@ pub fn add_weight_to_graph(
 mod numvc_tests {
     use petgraph::graphmap::UnGraphMap;
 
-    use crate::graph_utils::load_clq_file;
+    use crate::graph_utils::{complement, load_clq_file};
     use crate::numvc;
 
     use super::*;
@@ -421,6 +456,15 @@ mod numvc_tests {
         let res = numvc(&graph, &mut clock, Some(&vec![0.0,0.0]), Some(3));
         assert_eq!(res.0, 3);
         assert_eq!(res.1, vec![0, 4, 3]);
+    }
+
+    #[test]
+    fn test_numvc_c125_9() {
+        let graph = load_clq_file("src/resources/graphs/C125.9.clq")
+            .expect("Error while loading the graph");
+        let mut clock = Clock::new(1); // 1 hour time limit
+        let res = numvc(&complement(&graph), &mut clock, Some(&vec![0.0,0.0]), Some(91));
+        assert_eq!(res.0, 91);
     }
 
     #[test]
