@@ -8,19 +8,31 @@ use vertex::graph_utils::{complement, is_vertex_cover, load_clq_file};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() >= 2 {
+    if args.len() == 3 {
         let graph = match load_clq_file(&format!("src/resources/graphs/{}", args[1])) {
             Ok(graph) => graph,
             Err(e) => panic!("Error while loading graph : {}", e),
         };
 
-        find_max_clique(&args[1], &graph);
+        let time_limit = match args[2].parse::<u64>() {
+            Ok(t) => t,
+            Err(_) => {
+                eprintln!("Error: time limit must be a positive integer");
+                eprintln!("Usage: cargo run [-r] --bin clique <graph_name> <time_limit>");
+                return;
+            }
+        };
+
+        find_max_clique(&args[1], &graph, time_limit);
+    } else {
+        eprintln!("Usage: cargo run [-r] --bin clique <graph_name> <time_limit>");
+
     }
 }
 
 
 
-fn find_max_clique(graph_id: &str, graph: &UnGraphMap<u64, ()>) {
+fn find_max_clique(graph_id: &str, graph: &UnGraphMap<u64, ()>, time_limit: u64) {
     let g = complement(graph);
     let density = (2 * g.edge_count()) as f64 / (g.node_count() * (g.node_count() - 1)) as f64;
     println!("Finding max clique of the graph. Specificity of the complement : \nOrder = {} and size = {}. Density = {}",
@@ -28,8 +40,7 @@ fn find_max_clique(graph_id: &str, graph: &UnGraphMap<u64, ()>) {
              g.edge_count(),
              density);
 
-    let limit = 3600;
-    let mut clock = Clock::new(limit);
+    let mut clock = Clock::new(time_limit);
 
     let res = branch_and_bound(&g, &mut clock, None, None);
     clock.stop_timer();
