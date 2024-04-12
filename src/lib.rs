@@ -10,12 +10,13 @@ use serde::{Deserialize, Serialize};
 use crate::branch_and_bound::b_and_b;
 use crate::errors::{ClockError, YamlError};
 use crate::graph_utils::{copy_graph, get_optimal_value, is_optimal_value, is_vertex_cover};
+use crate::numvc::{add_weight_to_graph, numvc_algorithm};
 
 pub mod graph_utils;
-mod branch_and_bound;
 pub mod mvcgraph;
 pub mod errors;
 mod numvc;
+mod branch_and_bound;
 
 /// Naïve algorithm that searches for the minimum vertex cover of a given graph.
 ///
@@ -39,9 +40,9 @@ mod numvc;
 /// graph.add_edge(2, 3, ());
 ///
 /// let expected_vertex_cover = 2; //[0, 2] or [1, 2]
-/// assert_eq!(naive_search(&graph, &mut Clock::new(3600)).0, expected_vertex_cover);
+/// assert_eq!(naive_search(&graph, &mut Clock::new(3600), None, None).0, expected_vertex_cover);
 /// ```
-pub fn naive_search(graph: &UnGraphMap<u64, ()>, clock: &mut Clock) -> (u64, Vec<u64>) {
+pub fn naive_search(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params: Option<&[f64]>, _optimal: Option<u64>) -> (u64, Vec<u64>) {
     let possible_values: Vec<u64> = (0..graph.node_count() as u64).collect();
     for i in 0..graph.node_count() {
         for t in possible_values.iter().combinations(i) {
@@ -67,18 +68,21 @@ pub fn naive_search(graph: &UnGraphMap<u64, ()>, clock: &mut Clock) -> (u64, Vec
 ///
 /// # Example
 /// ```rust
-/// use petgraph::prelude::UnGraphMap;use vertex::graph_utils::load_clq_file;
+/// use vertex::graph_utils::load_clq_file;
 /// use vertex::{naive_search, run_algorithm};
 ///
 /// let mut graph = load_clq_file("src/resources/graphs/test.clq").unwrap();
-/// let res = run_algorithm("test.clq", &graph, &naive_search, false).unwrap_or_else(|e| {
+/// // Naive search does not need parameters : run it with None
+/// let res = run_algorithm("test.clq", &graph, &naive_search, None , 3600, false).unwrap_or_else(|e| {
 ///    panic!("Error while running algorithm : {}", e);
 /// });
 /// println!("{}", res);
 /// ```
 pub fn run_algorithm(graph_id: &str,
                      graph: &UnGraphMap<u64, ()>,
-                     f: &dyn Fn(&UnGraphMap<u64, ()>, &mut Clock) -> (u64, Vec<u64>),
+                     f: &dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>),
+                     params: Option<&[f64]>,
+                     time_limit: u64,
                      cmpl: bool) -> Result<MVCResult, YamlError> {
     let g: UnGraphMap<u64, ()>;
     if cmpl {
@@ -97,11 +101,15 @@ pub fn run_algorithm(graph_id: &str,
                  density);
     }
 
-    let limit = 3600;
+    let mut clock: Clock = Clock::new(time_limit);
 
-    let mut clock: Clock = Clock::new(limit);
+    let optimal = if cmpl {
+        get_optimal_value(graph_id, Some("src/resources/clique_data.yml"))
+    } else {
+        get_optimal_value(graph_id, None)
+    };
 
-    let res = f(&g, &mut clock);
+    let res = f(&g, &mut clock, params, optimal.unwrap_or(None));
 
     let elapsed = clock.get_time();
     if !clock.is_time_up() {
@@ -131,13 +139,13 @@ pub fn run_algorithm(graph_id: &str,
 ///             .expect("Error while loading graph");
 /// let mut clock = Clock::new(3600); // 1 hour time limit
 ///
-/// let res = branch_and_bound(&graph, &mut clock);
+/// let res = branch_and_bound(&graph, &mut clock, None, None);
 ///
 /// assert_eq!(res.0, 3);
 /// assert_eq!(res.1, vec![0, 4, 2]);
 /// ```
 ///
-pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock) -> (u64, Vec<u64>) {
+pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
     // Initialize the upper bound to the number of nodes in the graph
     // and the vertex cover found so far is empty
     let upper_bound_vc = &graph.nodes().collect();
@@ -145,7 +153,49 @@ pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock) -> (u64,
                     upper_bound_vc, vec![], clock);
 
     assert!(is_vertex_cover(graph, &u.1));
+    if optimal.is_some() {
+        assert_eq!(u.0, optimal.unwrap());
+    }
     u
+}
+
+/// Local search based algorithm that search for the minimum vertex cover of a given graph.
+///
+/// This algorithm comes from an article by Cai et al. (2013)
+///
+/// # Parameters
+/// - `graph`: The graph on which we want to compute the vertex cover
+/// - `clock`: The clock used to measure the time taken by the algorithm and stop it if it reaches the time limit
+/// - `params`: The parameters of the algorithm. It is a vector of 2 elements. The first element is the threshold and the second element is rho.
+/// - `optimal`: The optimal value of the minimum vertex cover. It is used to stop the algorithm if it finds a vertex cover with this value.
+/// You can set it to a negative value if you don't want to use it and let the algorithm run until it reaches the time limit.
+///
+/// # Example
+/// ```rust
+/// use petgraph::prelude::UnGraphMap;
+/// use vertex::{Clock, numvc};
+/// use vertex::graph_utils::load_clq_file;
+///
+/// let graph = load_clq_file("src/resources/graphs/test.clq")
+///             .expect("Error while loading the graph");
+/// let mut clock = Clock::new(3600); // 1 hour time limit
+/// let res = numvc(&graph, &mut clock, Some(&vec![0.0, 0.0]), Some(3));
+///
+/// assert_eq!(res.0, 3);
+/// assert_eq!(res.1, vec![0, 4, 3]);
+/// ```
+pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
+    let mut threshold = 0.0;
+    let mut rho = 0.0;
+    if params.is_some() && params.unwrap().len() == 2 {
+        threshold = params.unwrap()[0];
+        rho = params.unwrap()[1];
+    }
+    let mut g = add_weight_to_graph(graph, 1);
+    let res = numvc_algorithm(&mut g, clock, threshold, rho, optimal);
+
+    assert!(is_vertex_cover(graph, &res));
+    (res.len() as u64, res)
 }
 
 /// Struct representing the time taken by an algorithm (in minutes, seconds, milliseconds and microseconds)
@@ -441,13 +491,13 @@ mod algorithms_tests {
         graph.add_edge(2, 3, ());
 
         let expected_vertex_cover = 2;
-        assert_eq!(naive_search(&graph, &mut Clock::new(3600)).0, expected_vertex_cover);
+        assert_eq!(naive_search(&graph, &mut Clock::new(3600), None, None).0, expected_vertex_cover);
     }
 
     #[test]
     fn test_naive_on_empty_graph() {
         let graph = Box::new(UnGraphMap::<u64, ()>::new());
-        assert_eq!(naive_search(&graph, &mut Clock::new(3600)).0, 0);
+        assert_eq!(naive_search(&graph, &mut Clock::new(3600), None, None).0, 0);
     }
 
     #[test]
@@ -462,7 +512,7 @@ mod algorithms_tests {
         graph.add_edge(2, 3, ());
 
         let clock = &mut Clock::new(0);
-        assert_eq!(naive_search(&graph, clock).0, 0);
+        assert_eq!(naive_search(&graph, clock, None, None).0, 0);
         assert!(clock.is_time_up());
     }
 }

@@ -353,13 +353,13 @@ mod branch_and_bound_tests {
         graph.add_edge(2, 0, ());
         graph.add_edge(2, 3, ());
 
-        assert_eq!(branch_and_bound(&graph, &mut Clock::new(3600)).0, 2);
+        assert_eq!(branch_and_bound(&graph, &mut Clock::new(3600), None, None).0, 2);
     }
 
     #[test]
     fn test_with_queen_5() {
         let graph = load_clq_file("src/resources/graphs/queen5_5.clq").unwrap();
-        let res = branch_and_bound(&graph, &mut Clock::new(3600));
+        let res = branch_and_bound(&graph, &mut Clock::new(3600), None, None);
         assert_eq!(res.0, 20);
     }
 

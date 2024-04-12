@@ -6,12 +6,22 @@ use crate::Clock;
 // TODO: Maybe use a function which take a grave without weights and returns a graph with weights
 // To use it here.
 #[allow(dead_code)]
-pub fn numvc(
-    graph: &UnGraphMap<u64, i32>,
-    clock: &mut Clock
+pub fn numvc_algorithm(
+    graph: &mut UnGraphMap<u64, i32>,
+    clock: &mut Clock,
+    mut threshold: f64,
+    mut rho: f64,
+    optimal: Option<u64>,
 ) -> Vec<u64> {
+    // Params
     let mut iter = 1; // Number of iterations
-
+    if threshold == 0.0 {
+        // Default value of threshold is 0.5 * |V|
+        threshold = 0.5 * graph.node_count() as f64;
+    }
+    if rho == 0.0 {
+        rho = 0.3;
+    }
     // Initialize dscores of vertices
     let mut dscores: Vec<i32> = vec![0; graph.node_count()];
     let mut solution: Vec<u64> = vec![];
@@ -19,7 +29,7 @@ pub fn numvc(
     // Time since the vertex was added/removed from the solution.
     // Added : positive value, Removed : negative value
 
-    update_dscores(graph, &mut solution, &mut dscores);
+    update_dscores(graph, &mut solution_age, &mut dscores);
 
     // Initialize confchange array (CC strategy)
     let mut confchange: Vec<u64> = vec![1; graph.node_count()];
@@ -32,11 +42,15 @@ pub fn numvc(
     while !clock.is_time_up() {
         if is_vertex_cover_with_weight(graph, &solution_age) {
             best_solution = solution.clone();
+            if optimal.is_some() && solution.len() == optimal.unwrap() as usize {
+                // We found the optimal solution
+                break;
+            }
             // Remove a vertex with highest dscore from C
             let v = get_vertex_with_highest_dscore_from_solution(&mut dscores, &mut solution, &solution_age);
             solution.retain(|&x| x != v);
             solution_age[v as usize] = -iter; // Set age to negative time since it was removed
-            update_dscores(graph, &mut solution, &mut dscores);
+            update_dscores(graph, &mut solution_age, &mut dscores);
             continue
         }
         // Select a vertex from c with the highest dscore
@@ -54,6 +68,13 @@ pub fn numvc(
         solution_age[v as usize] = iter;
         update_confchange(graph, v, &mut confchange, false);
 
+
+        update_weights(graph, &solution_age);
+
+        let mean = compute_mean_weight(graph);
+        if mean >= threshold {
+            reduce_weights(graph, rho);
+        }
 
         iter += 1;
     }
@@ -110,12 +131,12 @@ fn update_weights(
 /// - `solution`: The solution for which the cost is computed
 fn get_cost(
     graph: &UnGraphMap<u64, i32>,
-    solution: &Vec<u64>
+    solution_age: &Vec<i32>
 ) -> i32 {
     let mut cost = 0;
     for (a, b, w) in graph.all_edges() {
         // TODO: modify this to use solution_age
-        if !solution.contains(&a) && !solution.contains(&b) {
+        if solution_age[a as usize] <= 0 && solution_age[b as usize] <= 0 {
             cost += w;
         }
     }
@@ -134,20 +155,20 @@ fn get_cost(
 /// - `vertex`: The vertex for which the dscore is computed
 fn compute_dscore(
     graph: &UnGraphMap<u64, i32>, // Use u64 as edge weights
-    solution: &mut Vec<u64>,
+    solution_age: &mut Vec<i32>,
     vertex: u64
 ) -> i32 {
-    // TODO: use solution_age instead of solution
-    let c1 = get_cost(graph, solution);
+    let c1 = get_cost(graph, solution_age);
     let c2;
-    if solution.contains(&vertex) {
-        solution.retain(|&x| x != vertex); // Remove vertex from solution
-        c2 = get_cost(graph, solution);
-        solution.push(vertex); // Add vertex back to solution
+    let age = solution_age[vertex as usize];
+    if age > 0 {
+        solution_age[vertex as usize] = 0; // Remove vertex from solution
+        c2 = get_cost(graph, solution_age);
+        solution_age[vertex as usize] = age; // Add vertex back to solution
     } else {
-        solution.push(vertex); // Add vertex to solution
-        c2 = get_cost(graph, solution);
-        solution.retain(|&x| x != vertex); // Remove vertex from solution
+        solution_age[vertex as usize] = 1; // Add vertex to solution
+        c2 = get_cost(graph, solution_age);
+        solution_age[vertex as usize] = age; // Remove vertex from solution
     }
     return c1 - c2;
 }
@@ -160,11 +181,11 @@ fn compute_dscore(
 /// - `dscores`: The dscores of the vertices
 fn update_dscores(
     graph: &UnGraphMap<u64, i32>,
-    solution: &mut Vec<u64>,
+    solution_age: &mut Vec<i32>,
     dscores: &mut Vec<i32>
 ) {
     for vertex in graph.nodes() {
-        dscores[vertex as usize] = compute_dscore(graph, solution, vertex);
+        dscores[vertex as usize] = compute_dscore(graph, solution_age, vertex);
     }
 }
 
@@ -243,7 +264,7 @@ fn compute_greedy_vc(
         let v = get_vertex_with_highest_dscore(dscores);
         solution.push(v);
         solution_age[v as usize] = *iter;
-        update_dscores(graph, solution, dscores);
+        update_dscores(graph, solution_age, dscores);
     }
 }
 
@@ -315,6 +336,21 @@ fn pick_new_vertex(
     }
 }
 
+/// Used to compute the mean weight of the edges in the graph. To determine if we have to reduce them
+fn compute_mean_weight(graph: &UnGraphMap<u64, i32>) -> f64 {
+    let mut sum = 0;
+    for (_, _, w) in graph.all_edges() {
+        sum += w;
+    }
+    return sum as f64 / graph.edge_count() as f64;
+}
+
+/// Reduce the weights of the edges in the graph by a factor of rho. (in place)
+fn reduce_weights(graph: &mut UnGraphMap<u64, i32>, rho: f64) {
+    for edge in graph.all_edges_mut() {
+        *edge.2 = (*edge.2 as f64 * rho).floor() as i32;
+    }
+}
 
 /// Check if the solution is a vertex cover of the graph.
 ///
@@ -336,16 +372,55 @@ pub fn is_vertex_cover_with_weight(graph: &UnGraphMap<u64, i32>, solution_age: &
     true
 }
 
+/// Creates a copy of a graph and add weight to all of its edges.
+///
+/// # Parameters
+/// - `graph`: The graph on which we want to add weights
+/// - `base_value`: THe initial value of the weight.
+///
+/// # Returns
+/// The graph with `base_value` on all of its edges as weight.
+pub fn add_weight_to_graph(
+    graph: &UnGraphMap<u64, ()>,
+    base_value: i32
+) -> UnGraphMap<u64, i32> {
+    let mut res = UnGraphMap::<u64, i32>::new();
+    for i in graph.nodes() {
+        res.add_node(i);
+    }
+    for (i, j, _) in graph.all_edges() {
+        res.add_edge(i, j, base_value);
+    }
+    res
+}
+
 #[cfg(test)]
 mod numvc_tests {
     use petgraph::graphmap::UnGraphMap;
 
+    use crate::graph_utils::load_clq_file;
+    use crate::numvc;
+
     use super::*;
 
     #[test]
-    #[ignore]
     fn test_numvc() {
-        todo!("Implement test")
+        let graph = load_clq_file("src/resources/graphs/test.clq")
+                    .expect("Error while loading the graph");
+        let mut clock = Clock::new(3600); // 1 hour time limit
+        let res = numvc(&graph, &mut clock, Some(&vec![0.0,0.0]), Some(3));
+        assert_eq!(res.0, 3);
+        assert_eq!(res.1, vec![0, 4, 3]);
+    }
+
+    #[test]
+    fn test_numvc_with_direct_cutoff() {
+        let graph = load_clq_file("src/resources/graphs/test.clq")
+                    .expect("Error while loading the graph");
+        let mut clock = Clock::new(0); // 0 seconds time limit
+        let res = numvc(&graph, &mut clock, Some(&vec![0.0,0.0]), Some(3));
+        assert_eq!(res.0, 3);
+        assert_eq!(res.1, vec![0, 4, 3]);
     }
 
     #[test]
@@ -414,9 +489,9 @@ mod numvc_tests {
         graph.add_edge(2, 4, 1);
         graph.add_edge(3, 4, 1);
 
-        assert_eq!(5, get_cost(&graph, &vec![]));
-        assert_eq!(1, get_cost(&graph, &vec![1,2]));
-        assert_eq!(0, get_cost(&graph, &vec![3,4,0]));
+        assert_eq!(5, get_cost(&graph, &vec![0,0,0,0,0]));
+        assert_eq!(1, get_cost(&graph, &vec![0,1,2,0,0]));
+        assert_eq!(0, get_cost(&graph, &vec![1,0,0,1,1]));
 
     }
 
@@ -433,8 +508,8 @@ mod numvc_tests {
         graph.add_edge(2, 4, 1);
         graph.add_edge(3, 4, 1);
 
-        assert_eq!(2, compute_dscore(&graph, &mut vec![], 0));
-        assert_eq!(-1, compute_dscore(&graph, &mut vec![3,4,0], 4));
+        assert_eq!(2, compute_dscore(&graph, &mut vec![0,0,0,0,0], 0));
+        assert_eq!(-1, compute_dscore(&graph, &mut vec![1,0,0,1,1], 4));
     }
 
     #[test]
@@ -478,7 +553,7 @@ mod numvc_tests {
         let mut solution = vec![];
         let mut solution_age = vec![-1; graph.node_count()];
         let mut dscores = vec![0; graph.node_count()];
-        update_dscores(&graph, &mut solution, &mut dscores);
+        update_dscores(&graph, &mut solution_age, &mut dscores);
 
         compute_greedy_vc(&graph, &mut solution, &mut solution_age, &1, &mut dscores);
         assert_eq!(vec![0, 2], solution);
@@ -607,5 +682,22 @@ mod numvc_tests {
 
         assert_eq!(false, is_vertex_cover_with_weight(&graph, &vec![1, 1, 0, 0, 0]));
         assert_eq!(true, is_vertex_cover_with_weight(&graph, &vec![1, 1, 1, 1, 0]));
+    }
+
+    #[test]
+    fn test_add_weight() {
+        let mut graph = UnGraphMap::<u64, ()>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(0, 2, ());
+        graph.add_edge(0, 3, ());
+        graph.add_edge(2, 4, ());
+
+        let graph = add_weight_to_graph(&graph, 3);
+        for edge in graph.all_edges() {
+            assert_eq!(*edge.2, 3);
+        }
     }
 }

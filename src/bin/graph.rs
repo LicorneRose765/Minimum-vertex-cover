@@ -8,7 +8,7 @@ use vertex::{branch_and_bound, run_algorithm};
 fn main() {
     // Used to test the algorithm on a .graph file coming from a GitHub repository
     let g = read_file();
-    let res = run_algorithm("karate.graph", &g, &branch_and_bound, false);
+    let res = run_algorithm("karate.graph", &g, &branch_and_bound, None , 300,false);
     match res {
         Ok(res) => println!("Result : {}", res),
         Err(e) => println!("Error : {}", e),

@@ -31,7 +31,7 @@ fn find_max_clique(graph_id: &str, graph: &UnGraphMap<u64, ()>) {
     let limit = 3600;
     let mut clock = Clock::new(limit);
 
-    let res = branch_and_bound(&g, &mut clock);
+    let res = branch_and_bound(&g, &mut clock, None, None);
     clock.stop_timer();
 
     assert!(is_vertex_cover(&g, &res.1));
