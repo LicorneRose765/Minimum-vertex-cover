@@ -42,7 +42,7 @@ pub fn numvc_algorithm(
     while !clock.is_time_up() {
         if is_vertex_cover_with_weight(graph, &solution_age) {
             best_solution = solution.clone();
-            if optimal.is_some() && solution.len() == optimal.unwrap() as usize {
+            if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {
                 // We found the optimal solution
                 break;
             }
