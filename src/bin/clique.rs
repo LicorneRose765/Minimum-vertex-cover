@@ -39,7 +39,7 @@ fn find_max_clique(graph_id: &str, graph: &UnGraphMap<u64, ()>) {
     let clique_val = graph.node_count() as u64 - res.0;
 
 
-    let res = match MVCResult::new(graph_id.to_string(), clique_val, res.1, clock.get_time(), clock.is_time_up(), true) {
+    let res = match MVCResult::new(graph_id.to_string(), clique_val, res.1, clock.get_time(), clock.is_time_up(), true, true) {
         Ok(res) => res,
         Err(e) => panic!("Error while creating MVCResult : {}", e),
 

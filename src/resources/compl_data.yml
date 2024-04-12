@@ -1,23 +1,21 @@
-# This file contains the values of the MVC for a list of graphs. (mainly DIMACS)
-# These values are just the results of the BnB algorithm presented in this repository.
-# Thus, some of the values may not be optimal (but should be)
-# and some values on large graphs are still not computed yet; (=0)
+# The values in this file are the MVC of the complement graphs of the graphs in the data folder
+# These values are either proved to be optimal or are the best known values.
 
 - id: myciel3.clq
   format: col
   order: 11
   size: 20
-  val: 6
+  val: 9
 - id: myciel4.clq
   format: col
   order: 23
   size: 71
-  val: 12
+  val: 21
 - id: HoG_660.clq
   format: col
   order: 10
   size: 15
-  val: 6
+  val: 8
 - id: queen5_5.clq
   format: col
   order: 25
@@ -27,7 +25,7 @@
   format: col
   order: 5
   size: 6
-  val: 3
+  val: 2
 - id: test2.clq
   format: clq
   order: 8
@@ -37,177 +35,177 @@
   format: clq
   order: 200
   size: 9876
-  val: 0
+  val: 188
 - id: brock200_4.clq
   format: clq
   order: 200
   size: 13089
-  val: 0
+  val: 183
 - id: brock400_2.clq
   format: clq
   order: 400
   size: 59786
-  val: 0
+  val: 371
 - id: brock400_4.clq
   format: clq
   order: 400
   size: 59765
-  val: 0
+  val: 367
 - id: brock800_2.clq
   format: clq
   order: 800
   size: 208166
-  val: 0
+  val: 776
 - id: brock800_4.clq
   format: clq
   order: 800
   size: 207643
-  val: 0
+  val: 774
 - id: C125.9.clq
   format: clq
   order: 125
   size: 6963
-  val: 0
+  val: 91
 - id: C250.9.clq
   format: clq
   order: 250
   size: 27984
-  val: 0
+  val: 206
 - id: C500.9.clq
   format: clq
   order: 500
   size: 112332
-  val: 0
+  val: 443
 - id: C1000.9.clq
   format: clq
   order: 1000
   size: 450079
-  val: 0
+  val: 932 # Not proved
 - id: C2000.5.clq
   format: clq
   order: 2000
   size: 999836
-  val: 0
+  val: 1984 # Not proved (and nto prop with clique_data)
 - id: C2000.9.clq
   format: clq
   order: 2000
   size: 1799532
-  val: 0
+  val: 1920 # Not proved
 - id: C4000.5.clq
   format: clq
   order: 4000
   size: 4000268
-  val: 0
+  val: 3982 # Not proved
 - id: gen200_p0.9_44.clq
   format: clq
   order: 200
   size: 17910
-  val: 0
+  val: 156
 - id: gen200_p0.9_55.clq
   format: clq
   order: 200
   size: 17910
-  val: 0
+  val: 145
 - id: gen400_p0.9_55.clq
   format: clq
   order: 400
   size: 71820
-  val: 0
+  val: 345
 - id: gen400_p0.9_65.clq
   format: clq
   order: 400
   size: 71820
-  val: 0
+  val: 335
 - id: gen400_p0.9_75.clq
   format: clq
   order: 400
   size: 71820
-  val: 0
+  val: 325
 - id: hamming8-4.clq
   format: clq
   order: 256
   size: 20864
-  val: 0
+  val: 240
 - id: hamming10-4.clq
   format: clq
   order: 1024
   size: 434176
-  val: 0
+  val: 984
 - id: keller4.clq
   format: clq
   order: 171
   size: 9435
-  val: 0
+  val: 160
 - id: keller5.clq
   format: clq
   order: 776
   size: 225990
-  val: 0
+  val: 749
 - id: keller6.clq
   format: clq
   order: 3361
   size: 4619898
-  val: 0
+  val: 3302 # Not proved
 - id: MANN_a27.clq
   format: clq
   order: 378
   size: 70551
-  val: 0
+  val: 252
 - id: MANN_a45.clq
   format: clq
   order: 1035
   size: 533115
-  val: 0
+  val: 690
 - id: MANN_a81.clq
   format: clq
   order: 3321
   size: 5506380
-  val: 0
+  val: 2221 # Not proved
 - id: p_hat300-1.clq
   format: clq
   order: 300
   size: 10933
-  val: 0
+  val: 292
 - id: p_hat300-2.clq
   format: clq
   order: 300
   size: 21928
-  val: 0
+  val: 275
 - id: p_hat300-3.clq
   format: clq
   order: 300
   size: 33390
-  val: 0
+  val: 264
 - id: p_hat700-1.clq
   format: clq
   order: 700
   size: 60999
-  val: 0
+  val: 689
 - id: p_hat700-2.clq
   format: clq
   order: 700
   size: 121728
-  val: 0
+  val: 656
 - id: p_hat700-3.clq
   format: clq
   order: 700
   size: 183010
-  val: 0
+  val: 638
 - id: p_hat1500-1.clq
   format: clq
   order: 1500
   size: 284923
-  val: 0
+  val: 1488
 - id: p_hat1500-2.clq
   format: clq
   order: 1500
   size: 568960
-  val: 0
+  val: 1435
 - id: p_hat1500-3.clq
   format: clq
   order: 1500
   size: 847244
-  val: 0
+  val: 1406 # Not proved
 - id: oui.clq
   format: clq
   order: 7
@@ -222,54 +220,54 @@
   format: clq
   order: 11
   size: 16
-  val: 6
+  val: 8
 - id: DSJC500.5.clq
   format: clq
   order: 500
   size: 62624
-  val: 0
+  val: 487
 - id: DSJC1000.5.clq
   format: clq
   order: 1000
   size: 249826
-  val: 0
+  val: 985
 - id: HoG_28.clq
   format: clq
   order: 4
   size: 5
-  val: 2
+  val: 1
 - id: HoG_226.clq
   format: clq
   order: 6
   size: 12
-  val: 4
+  val: 3
 - id: HoG_1190.clq
   format: clq
   order: 30
   size: 60
-  val: 20
+  val: 27
 - id: HoG_176.clq
   format: clq
   order: 8
   size: 24
-  val: 6
+  val: 4
 - id: HoG_92.clq
   format: clq
   order: 10
   size: 30
-  val: 4
+  val: 5
 - id: HoG_1171.clq
   format: clq
   order: 50
   size: 1050
-  val: 48
+  val: 35
 - id: HoG_1073.clq
   format: clq
   order: 15
   size: 15
-  val: 10
+  val: 12
 - id: HoG_1116.clq
   format: clq
   order: 18
   size: 45
-  val: 12
+  val: 15

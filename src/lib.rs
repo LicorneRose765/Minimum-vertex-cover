@@ -73,7 +73,7 @@ pub fn naive_search(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params: Opt
 ///
 /// let mut graph = load_clq_file("src/resources/graphs/test.clq").unwrap();
 /// // Naive search does not need parameters : run it with None
-/// let res = run_algorithm("test.clq", &graph, &naive_search, None , 3600, false).unwrap_or_else(|e| {
+/// let res = run_algorithm("test.clq", &graph, &naive_search, None , 3600, false, false).unwrap_or_else(|e| {
 ///    panic!("Error while running algorithm : {}", e);
 /// });
 /// println!("{}", res);
@@ -83,7 +83,8 @@ pub fn run_algorithm(graph_id: &str,
                      f: &dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>),
                      params: Option<&[f64]>,
                      time_limit: u64,
-                     cmpl: bool) -> Result<MVCResult, YamlError> {
+                     cmpl: bool,
+                     is_clq: bool) -> Result<MVCResult, YamlError> {
     let g: UnGraphMap<u64, ()>;
     if cmpl {
         g = graph_utils::complement(graph);
@@ -104,7 +105,11 @@ pub fn run_algorithm(graph_id: &str,
     let mut clock: Clock = Clock::new(time_limit);
 
     let optimal = if cmpl {
-        get_optimal_value(graph_id, Some("src/resources/clique_data.yml"))
+        if is_clq {
+            get_optimal_value(graph_id, Some("src/resources/clique_data.yml"))
+        } else {
+            get_optimal_value(graph_id, Some("src/resources/compl_data.yml"))
+        }
     } else {
         get_optimal_value(graph_id, None)
     };
@@ -117,7 +122,7 @@ pub fn run_algorithm(graph_id: &str,
         assert_eq!(res.0, res.1.len() as u64);
     }
 
-    MVCResult::new(graph_id.to_string(), res.0, res.1, elapsed, clock.is_time_up(), cmpl)
+    MVCResult::new(graph_id.to_string(), res.0, res.1, elapsed, clock.is_time_up(), cmpl, is_clq)
 }
 
 /// Branch and bound algorithm that searches for the minimum vertex cover of a given graph.
@@ -262,12 +267,18 @@ pub struct MVCResult {
     pub is_time_limit: bool,
     /// Whether the algorithm was run on the complement of the graph
     pub is_compl: bool,
+    /// Whether the value is the value of the maximum clique of the graph
+    pub is_clq: bool,
 }
 
 impl MVCResult {
-    pub fn new(graph_id: String, value: u64, mvc: Vec<u64>, time: ElapseTime, is_time_limit: bool, is_compl: bool) -> Result<MVCResult, YamlError> {
+    pub fn new(graph_id: String, value: u64, mvc: Vec<u64>, time: ElapseTime, is_time_limit: bool, is_compl: bool, is_clq: bool) -> Result<MVCResult, YamlError> {
         let is_optimal = if is_compl {
-            is_optimal_value(&graph_id, value, Some("src/resources/clique_data.yml"))?
+            if is_clq {
+                is_optimal_value(&graph_id, value, Some("src/resources/clique_data.yml"))?
+            } else {
+                is_optimal_value(&graph_id, value, Some("src/resources/compl_data.yml"))?
+            }
         } else {
             is_optimal_value(&graph_id, value, None)?
         };
@@ -279,6 +290,7 @@ impl MVCResult {
             time,
             is_time_limit,
             is_compl,
+            is_clq,
         })
     }
 }
@@ -291,7 +303,11 @@ impl Display for MVCResult {
                     "\t The value is optimal (as long as the data is correct in the yaml file)".to_string()
                 } else {
                     let true_opt = if self.is_compl {
-                        get_optimal_value(&self.graph_id, Some("src/resources/clique_data.yml")).unwrap_or(Some(0))
+                        if self.is_clq {
+                            get_optimal_value(&self.graph_id, Some("src/resources/clique_data.yml")).unwrap_or(Some(0))
+                        } else {
+                            get_optimal_value(&self.graph_id, Some("src/resources/compl_data.yml")).unwrap_or(Some(0))
+                        }
                     } else {
                         get_optimal_value(&self.graph_id, None).unwrap_or(Some(0))
                     };

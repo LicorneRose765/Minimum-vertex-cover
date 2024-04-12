@@ -20,14 +20,14 @@ fn main() {
 
 
         if args.len() == 4 && args[3] == "-c" {
-            match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, true) {
+            match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, true, false) {
                 Ok(res) => println!("Result : {}", res),
                 Err(e) => println!("Error : {}", e),
             }
             return;
         }
 
-        match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, false) {
+        match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, false, false) {
             Ok(res) => println!("Result : {}", res),
             Err(e) => println!("Error : {}", e),
         };
