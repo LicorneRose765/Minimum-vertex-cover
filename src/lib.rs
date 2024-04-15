@@ -204,30 +204,6 @@ pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
 
     assert!(is_vertex_cover(graph, &res));
 
-
-
-    clock.stop_timer();
-
-    println!("================ Result ===================");
-    println!("======== Details about performance ========");
-    println!("Time spent in dscore_update : {}%", round(clock.get_subroutine_duration("dscore_update").as_secs_f64() * 100.0
-                                                  / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in get_vertex_with_dscore : {}%", round(clock.get_subroutine_duration("get_vertex_with_highest_dscore_from_solution").as_secs_f64() * 100.0
-                                                  / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in max update_confchange : {}%", round(clock.get_subroutine_duration("update_confchange").as_secs_f64() * 100.0
-                                                      / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in pick_new_vertex : {}%", round(clock.get_subroutine_duration("pick_new_vertex").as_secs_f64() * 100.0
-                                                   / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in update_weights : {}%", round(clock.get_subroutine_duration("update_weights").as_secs_f64() * 100.0
-                                                              / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in mean : {}%", round(clock.get_subroutine_duration("mean").as_secs_f64() * 100.0
-                                                             / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in retain : {}%", round(clock.get_subroutine_duration("retain").as_secs_f64() * 100.0
-                                                   / clock.get_time().duration.as_secs_f64(), 4));
-    println!("Time spent in greedy : {}%", round(clock.get_subroutine_duration("greedy_vc").as_secs_f64() * 100.0
-                                                      / clock.get_time().duration.as_secs_f64(), 4));
-    println!("===========================================");
-
     (res.len() as u64, res)
 }
 

@@ -109,7 +109,8 @@ fn compute_lb(graph: UnGraphMap<u64, ()>, clock: &mut Clock) -> u64 {
     clock.enter_subroutine("clq_lb");
     let clq_lb = handle_clq.join().unwrap();
     clock.exit_subroutine("clq_lb").expect("Error while exiting subroutine");
-    max(deg_lb, clq_lb)
+    //max(deg_lb, clq_lb) TODO: check clq_lb
+    deg_lb
 }
 
 fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {

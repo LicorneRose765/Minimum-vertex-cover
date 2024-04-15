@@ -3,7 +3,6 @@ use rand::seq::IteratorRandom;
 
 use crate::Clock;
 
-// TODO: Maybe use a function which take a grave without weights and returns a graph with weights
 // To use it here.
 #[allow(dead_code)]
 pub fn numvc_algorithm(
@@ -13,6 +12,7 @@ pub fn numvc_algorithm(
     mut rho: f64,
     optimal: Option<u64>,
 ) -> Vec<u64> {
+    println!("Starting NuMVC algorithm");
     // Params
     let mut iter = 1; // Number of iterations
     if threshold == 0.0 {
@@ -35,14 +35,14 @@ pub fn numvc_algorithm(
     let mut confchange: Vec<u64> = vec![1; graph.node_count()];
 
     // Construct the first solution greedily by selecting the vertex with the highest dscore
-    clock.enter_subroutine("greedy_vc");
     compute_greedy_vc(graph, &mut solution, &mut solution_age, &iter, &mut dscores);
-    clock.exit_subroutine("greedy_vc").expect("Subroutine not found");
     let mut best_solution = solution.clone();
 
-    clock.enter_subroutine("main");
     // Main loop
     while !clock.is_time_up() {
+        if iter % 1000 == 0 {
+            println!("Iteration {}, best solution : {}", iter, best_solution.len());
+        }
         if is_vertex_cover_with_weight(graph, &solution_age) {
             best_solution = solution.clone();
             if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {
@@ -51,92 +51,86 @@ pub fn numvc_algorithm(
                 break;
             }
 
-            // Remove a vertex with highest dscore from C
-            clock.enter_subroutine("dscore_update");
-            update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
-            clock.exit_subroutine("dscore_update").expect("Subroutine not found");
-            clock.enter_subroutine("get_vertex_with_highest_dscore_from_solution");
+            // Remove the worst vertex from the solution
             let v = get_vertex_with_highest_dscore_from_solution(&dscores, &solution, &solution_age);
-            clock.exit_subroutine("get_vertex_with_highest_dscore_from_solution").expect("Subroutine not found");
-            clock.enter_subroutine("retain");
-            solution.retain(|&x| x != v);
-            clock.exit_subroutine("retain").expect("Subroutine not found");
-            solution_age[v as usize] = -iter; // Set age to negative time since it was removed
+            remove(graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, v, iter);
 
-            iter += 1;
             continue
         }
         // Select a vertex from c with the highest dscore
-        clock.enter_subroutine("dscore_update");
-        update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
-        clock.exit_subroutine("dscore_update").expect("Subroutine not found");
-        clock.enter_subroutine("get_vertex_with_highest_dscore_from_solution");
         let u = get_vertex_with_highest_dscore_from_solution(&dscores, &solution, &solution_age);
-        clock.exit_subroutine("get_vertex_with_highest_dscore_from_solution").expect("Subroutine not found");
-        // Remove u from C
-        clock.enter_subroutine("retain");
-        solution.retain(|&x| x != u);
-        clock.exit_subroutine("retain").expect("Subroutine not found");
-        solution_age[u as usize] = -iter;
-        clock.enter_subroutine("update_confchange");
-        update_confchange(graph, u, &mut confchange, true);
-        clock.exit_subroutine("update_confchange").expect("Subroutine not found");
+        /* C := C\{u}, confChange(u) := 0 and confChange(z) := 1 for each z in
+       * N(u); */
+        remove(graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, u, iter);
 
 
-        clock.enter_subroutine("update_dscores");
-        update_dscores(graph, &mut solution_age, &mut dscores); // Update dscores before using it
-        clock.exit_subroutine("update_dscores").expect("Subroutine not found");
         // Select a vertex to add
-        clock.enter_subroutine("pick_new_vertex");
         let v = pick_new_vertex(graph, &dscores, &confchange, &solution_age);
-        clock.exit_subroutine("pick_new_vertex").expect("Subroutine not found");
 
-        // Add v to C
-        clock.enter_subroutine("retain");
-        solution.push(v);
-        clock.exit_subroutine("retain").expect("Subroutine not found");
-        solution_age[v as usize] = iter;
-        clock.enter_subroutine("update_confchange");
-        update_confchange(graph, v, &mut confchange, false);
-        clock.exit_subroutine("update_confchange").expect("Subroutine not found");
+        /* C := C plus {v}, confChange(z) := 1 for each z in N(v); */
+        add(graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, v, iter);
 
-        clock.enter_subroutine("update_weights");
-        update_weights(graph, &solution_age);
-        clock.exit_subroutine("update_weights").expect("Subroutine not found");
+        /* w(e) := w(e) + 1 for each uncovered edge e; */
+        update_weights(graph, &solution_age, &mut dscores);
 
-        clock.enter_subroutine("mean");
+        /* if w >= y then w(e) := [p*w(e)] for each edge e; */
         let mean = compute_mean_weight(graph);
         if mean >= threshold {
-            reduce_weights(graph, rho);
+            reduce_weights(graph, rho, &mut dscores, &solution_age);
         }
-        clock.exit_subroutine("mean").expect("Subroutine not found");
 
         iter += 1;
     }
-    clock.exit_subroutine("main").expect("Subroutine not found");
     println!("Number of iterations : {}", iter);
     return best_solution;
 }
 
-/// Modify the confchange array in reaction of the addition or removal of a vertex. (in place)
-///
-/// See the CC strategy in the source paper for more information.
-///
-/// # Parameters
-/// - `graph`: The graph on which the vertex cover is computed
-/// - `u`: The vertex that was added or removed
-/// - `confchange`: The confchange array
-/// - `is_u_changing`: True if the vertex was removed. False if the vertex was added.
-fn update_confchange(
+fn remove(
     graph: &UnGraphMap<u64, i32>,
-    u: u64,
+    solution: &mut Vec<u64>,
+    solution_age: &mut Vec<i32>,
+    dscores: &mut Vec<i32>,
     confchange: &mut Vec<u64>,
-    is_u_changing: bool) {
-    if is_u_changing {
-        confchange[u as usize] = 0;
+    vertex: u64,
+    iter: i32,
+) {
+    solution.retain(|&x| x != vertex);
+    solution_age[vertex as usize] = -iter;
+    confchange[vertex as usize] = 0;
+    dscores[vertex as usize] *= -1;
+
+    for i in graph.neighbors(vertex) {
+        if solution_age[i as usize] <= 0 {
+            // If the vertex is not in the solution
+            confchange[i as usize] = 1;
+            dscores[i as usize] += graph.edge_weight(vertex, i).unwrap();
+        } else {
+            dscores[i as usize] -= graph.edge_weight(vertex, i).unwrap();
+        }
     }
-    for z in graph.neighbors(u) {
-        confchange[z as usize] = 1;
+}
+
+fn add(
+    graph: &UnGraphMap<u64, i32>,
+    solution: &mut Vec<u64>,
+    solution_age: &mut Vec<i32>,
+    dscores: &mut Vec<i32>,
+    confchange: &mut Vec<u64>,
+    vertex: u64,
+    iter: i32,
+) {
+    solution.push(vertex);
+    solution_age[vertex as usize] = iter;
+    dscores[vertex as usize] *= -1;
+
+    for i in graph.neighbors(vertex) {
+        if solution_age[i as usize] <= 0 {
+            // If the vertex is not in the solution
+            confchange[i as usize] = 1;
+            dscores[i as usize] -= graph.edge_weight(vertex, i).unwrap();
+        } else {
+            dscores[i as usize] += graph.edge_weight(vertex, i).unwrap();
+        }
     }
 }
 
@@ -147,10 +141,14 @@ fn update_confchange(
 /// - `solution_age`: The array containing the age of the vertices in the solution. (The vertices that are not in the solution have an age of 0)
 fn update_weights(
     graph: &mut UnGraphMap<u64, i32>,
-    solution_age: &Vec<i32>, ) {
+    solution_age: &Vec<i32>,
+    dscores: &mut Vec<i32>
+) {
     for edge in graph.all_edges_mut() {
         if solution_age[edge.0 as usize] <= 0 && solution_age[edge.1 as usize] <= 0 {
             // If solution_old > 0, it means that the vertex is currently in the solution
+            dscores[edge.0 as usize] += 1;
+            dscores[edge.1 as usize] += 1;
             *edge.2 += 1;
         }
     }
@@ -297,9 +295,7 @@ fn compute_greedy_vc(
 ) {
     while !is_vertex_cover_with_weight(graph, solution_age) {
         let v = get_vertex_with_highest_dscore(dscores);
-        solution.push(v);
-        solution_age[v as usize] = *iter;
-        update_dscores(graph, solution_age, dscores);
+        add(graph, solution, solution_age, dscores, &mut vec![1; graph.node_count()], v, *iter);
     }
 }
 
@@ -381,9 +377,23 @@ fn compute_mean_weight(graph: &UnGraphMap<u64, i32>) -> f64 {
 }
 
 /// Reduce the weights of the edges in the graph by a factor of rho. (in place)
-fn reduce_weights(graph: &mut UnGraphMap<u64, i32>, rho: f64) {
-    for edge in graph.all_edges_mut() {
-        *edge.2 = (*edge.2 as f64 * rho).floor() as i32;
+fn reduce_weights(graph: &mut UnGraphMap<u64, i32>, rho: f64, dscores: &mut Vec<i32>, solution_age: &Vec<i32>) {
+    dscores.fill(0);
+
+    for (a, b, w) in graph.all_edges_mut() {
+        *w = (*w as f64 * rho).floor() as i32;
+
+        // Update dscore
+        if solution_age[a as usize] <= 0 && solution_age[b as usize] <= 0 {
+            dscores[a as usize] += *w;
+            dscores[b as usize] += *w;
+        } else if a != b {
+            if solution_age[a as usize] > 0 {
+                dscores[a as usize] -= *w;
+            } else {
+                dscores[b as usize] -= *w;
+            }
+        }
     }
 }
 
@@ -463,12 +473,12 @@ mod numvc_tests {
         let graph = load_clq_file("src/resources/graphs/C125.9.clq")
             .expect("Error while loading the graph");
         let mut clock = Clock::new(1); // 1 hour time limit
-        let res = numvc(&complement(&graph), &mut clock, Some(&vec![0.0,0.0]), Some(91));
+        let res = numvc(&complement(&graph), &mut clock, Some(&vec![0.0, 0.0]), Some(91));
         assert_eq!(res.0, 91);
     }
 
     #[test]
-    fn test_update_confchange() {
+    fn test_add() {
         // house-shaped graph with weights = 1
         let mut graph = UnGraphMap::<u64, i32>::new();
         for i in 0..5 {
@@ -480,16 +490,90 @@ mod numvc_tests {
         graph.add_edge(2, 4, 1);
         graph.add_edge(3, 4, 1);
 
-        let mut confchange = vec![1, 0, 0, 0, 0];
-        // Remove vertex 0, confchange of 0 should be set to 0
-        // Neighbors of 0 should be set to 1
-        update_confchange(&graph, 0, &mut confchange, true);
-        assert_eq!(vec![0, 1, 1, 0, 0], confchange);
+        let mut solution_age = vec![0,0,0,0,0];
+        let mut solution = vec![];
+        let mut dscores = vec![2,2,2,2,2];
+        let mut confchange = vec![1, 1, 1, 1, 1];
+        add(&mut graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, 0, 1);
+        assert_eq!(solution, vec![0]);
+        assert_eq!(solution_age, vec![1, 0, 0, 0, 0]);
+        assert_eq!(dscores, vec![-2, 1, 1, 2, 2]);
+        assert_eq!(confchange, vec![1, 1, 1, 1, 1]);
+    }
 
-        let mut confchange = vec![1, 0, 0, 0, 0];
-        // Add vertex 0, confchange of its neighbors should be set to 1
-        update_confchange(&graph, 0, &mut confchange, false);
-        assert_eq!(vec![1, 1, 1, 0, 0], confchange);
+    #[test]
+    fn test_add_with_solution() {
+        // house-shaped graph with weights = 1
+        let mut graph = UnGraphMap::<u64, i32>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, 1);
+        graph.add_edge(0, 2, 1);
+        graph.add_edge(1, 3, 1);
+        graph.add_edge(2, 4, 1);
+        graph.add_edge(3, 4, 1);
+
+        let mut solution_age = vec![0,1,0,0,0];
+        let mut solution = vec![1];
+        let mut dscores = vec![1,-2,2,1,2];
+        let mut confchange = vec![1, 1, 1, 1, 1];
+        add(&mut graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, 0, 2);
+
+        assert_eq!(solution, vec![1, 0]);
+        assert_eq!(solution_age, vec![2, 1, 0, 0, 0]);
+        assert_eq!(dscores, vec![-1, -1, 1, 1, 2]);
+        assert_eq!(confchange, vec![1, 1, 1, 1, 1]);
+    }
+
+    #[test]
+    fn test_remove() {
+        // house-shaped graph with weights = 1
+        let mut graph = UnGraphMap::<u64, i32>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, 1);
+        graph.add_edge(0, 2, 1);
+        graph.add_edge(1, 3, 1);
+        graph.add_edge(2, 4, 1);
+        graph.add_edge(3, 4, 1);
+
+        let mut solution_age = vec![1, 0, 0, 0, 0];
+        let mut solution = vec![0];
+        let mut dscores = vec![-2, 1, 1, 2, 2];
+        let mut confchange = vec![1, 1, 1, 1, 1];
+        remove(&mut graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, 0, 1);
+
+        assert_eq!(solution, vec![]);
+        assert_eq!(solution_age, vec![-1, 0, 0, 0, 0]);
+        assert_eq!(dscores, vec![2, 2, 2, 2, 2]);
+        assert_eq!(confchange, vec![0, 1, 1, 1, 1]);
+    }
+
+    #[test]
+    fn test_remove_with_solution() {
+        // house-shaped graph with weights = 1
+        let mut graph = UnGraphMap::<u64, i32>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, 1);
+        graph.add_edge(0, 2, 1);
+        graph.add_edge(1, 3, 1);
+        graph.add_edge(2, 4, 1);
+        graph.add_edge(3, 4, 1);
+
+        let mut solution_age = vec![1, 1, 0, 0, 0];
+        let mut solution = vec![0,1];
+        let mut dscores = vec![-1, -1, 1, 1, 2];
+        let mut confchange = vec![1, 1, 1, 1, 1];
+        remove(&mut graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, 0, 2);
+
+        assert_eq!(solution, vec![1]);
+        assert_eq!(solution_age, vec![-2, 1, 0, 0, 0]);
+        assert_eq!(dscores, vec![1,-2,2,1,2]);
+        assert_eq!(confchange, vec![0, 1, 1, 1, 1]);
     }
 
     #[test]
@@ -509,7 +593,9 @@ mod numvc_tests {
         solution_age[0] = 1;
         solution_age[1] = 1;
 
-        update_weights(&mut graph, &solution_age);
+        let mut dscores = vec![0; graph.node_count()];
+
+        update_weights(&mut graph, &solution_age, &mut dscores);
 
         // Covered edges not modified
         assert_eq!(*graph.edge_weight(0, 1).unwrap(), 1);

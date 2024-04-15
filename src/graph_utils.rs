@@ -128,6 +128,10 @@ pub fn is_independent_set(graph: &UnGraphMap<u64, ()>, independent_set: &Vec<u64
 pub fn complement(graph: &UnGraphMap<u64, ()>) -> UnGraphMap<u64, ()> {
     let mut complement = UnGraphMap::<u64, ()>::new();
 
+    for i in 0..graph.node_count() {
+        complement.add_node(i as u64);
+    }
+
     for a in graph.nodes() {
         for b in graph.nodes() {
             if a != b && !graph.contains_edge(a, b) {
@@ -798,14 +802,14 @@ mod graph_utils_tests {
         }
         g.add_edge(0, 1, ());
         g.add_edge(0, 2, ());
+        g.add_edge(0, 3, ());
         g.add_edge(2, 3, ());
 
         let complement = complement(&g);
-        assert_eq!(complement.edge_count(), 3);
+        assert_eq!(complement.edge_count(), 2);
         assert_eq!(complement.node_count(), 4);
         assert!(complement.contains_edge(1, 3));
         assert!(complement.contains_edge(1, 2));
-        assert!(complement.contains_edge(0, 3));
     }
 
     #[test]
