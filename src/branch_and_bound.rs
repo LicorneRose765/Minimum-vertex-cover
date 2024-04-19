@@ -30,7 +30,6 @@ pub fn b_and_b(_graph: &UnGraphMap<u64, ()>,
     let (v, _max_deg) = get_vertex_with_max_degree(&subgraph, None);
     clock.exit_subroutine("max_deg").expect("Error while exiting subroutine");
 
-
     if vertex_cover.len() as u64 + compute_lb(copy_graph(&subgraph), clock)  >= upper_bound {
         // We can't find a better solution in this branch, we stop and return the best known solution
         return (upper_bound, upper_bound_vc.clone());
@@ -109,8 +108,7 @@ fn compute_lb(graph: UnGraphMap<u64, ()>, clock: &mut Clock) -> u64 {
     clock.enter_subroutine("clq_lb");
     let clq_lb = handle_clq.join().unwrap();
     clock.exit_subroutine("clq_lb").expect("Error while exiting subroutine");
-    //max(deg_lb, clq_lb) TODO: check clq_lb
-    deg_lb
+    max(deg_lb, clq_lb)
 }
 
 fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
@@ -162,8 +160,9 @@ fn clq_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     // 2) Find a greedy coloring of the complement
     let color_set = welch_powell(&compl);
 
+
     // Adds the number of nodes in each color minus 1 = lower bound. If a value is 0, change it to 1
-    color_set.iter().map(|&x| x as u64 - 1).sum::<u64>()
+    color_set.iter().map(|&x| (x-1) as u64).sum::<u64>()
 }
 
 
@@ -174,7 +173,7 @@ fn clq_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
 #[allow(dead_code)]
 fn greedy_coloring(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
     // 1. Create a color set. The vertex degree of each vertex is calculated and the vertex degrees are added to
-    let mut color_set = Vec::new(); // color_set[i] = j means that color i has j vertexes
+    let mut color_set = Vec::new(); // color_set[i] = j means that color i has j vertices
     let mut colors = HashMap::new();
     for i in graph.nodes() {
         colors.insert(i, 0);
@@ -217,7 +216,22 @@ fn greedy_coloring(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
             }
         }
     }
+
+    assert!(is_good_coloring(graph, &colors));
+
     color_set
+}
+
+
+fn is_good_coloring(graph: &UnGraphMap<u64, ()>, colors: &HashMap<u64, usize>) -> bool {
+    for vertex in graph.nodes() {
+        for neighbor in graph.neighbors(vertex) {
+            if colors.get(&vertex) == colors.get(&neighbor) {
+                return false;
+            }
+        }
+    }
+    true
 }
 
 #[allow(dead_code)]

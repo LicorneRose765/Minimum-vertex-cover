@@ -128,8 +128,8 @@ pub fn is_independent_set(graph: &UnGraphMap<u64, ()>, independent_set: &Vec<u64
 pub fn complement(graph: &UnGraphMap<u64, ()>) -> UnGraphMap<u64, ()> {
     let mut complement = UnGraphMap::<u64, ()>::new();
 
-    for i in 0..graph.node_count() {
-        complement.add_node(i as u64);
+    for i in graph.nodes() {
+        complement.add_node(i);
     }
 
     for a in graph.nodes() {
