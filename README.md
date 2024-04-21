@@ -1,7 +1,9 @@
 # Minimum-vertex-cover
 
 ![Rust workflow](https://github.com/LicorneRose765/Minimum-vertex-cover/actions/workflows/rust.yml/badge.svg)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/LicorneRose765/ClockSystem/badge)](https://securityscorecards.dev/viewer/?uri=github.com/LicorneRose765/ClockSystem)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/LicorneRose765/ClockSystem/badge)](https://securityscorecards.dev/viewer/?uri=github.com/LicorneRose765/ClockSystem)  
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LicorneRose765_Minimum-vertex-cover&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=LicorneRose765_Minimum-vertex-cover)
+
 
 [![codecov](https://codecov.io/gh/LicorneRose765/Minimum-vertex-cover/graph/badge.svg?token=AC37S9XQPX)](https://codecov.io/gh/LicorneRose765/Minimum-vertex-cover)
 
