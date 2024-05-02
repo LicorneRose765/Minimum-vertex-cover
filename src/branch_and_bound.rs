@@ -165,7 +165,6 @@ fn clq_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     color_set.iter().map(|&x| (x-1) as u64).sum::<u64>()
 }
 
-
 // Color the graph such that every node has a different color than its neighbors.
 // This algorithm returns a vector containing the number of vertex in each color.
 //
@@ -222,6 +221,61 @@ fn greedy_coloring(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
     color_set
 }
 
+#[allow(dead_code)]
+fn _renumber(graph: &UnGraphMap<u64, ()> ,
+            vertex: u64,
+            color_v: usize,
+            max_color: usize,
+            colors: &mut HashMap<u64, usize>,
+            color_set: &mut Vec<usize>,
+            color_edges: &mut Vec<Vec<u64>>,
+) {
+    for k1 in 1..max_color-1 {
+        // If a neighbor of vertex has the same color as vertex, we renumber vertex
+        let mut q=0;
+        let mut found = false;
+        for test_q in &color_edges[k1] {
+            if graph.contains_edge(vertex, *test_q) {
+                if found {
+                    // More than one neighbor has the same color as vertex, we don't renumber vertex
+                    return;
+                }
+                q = *test_q;
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            // No neighbor has the same color as vertex, we don't renumber vertex
+            return;
+        }
+        for k2 in (k1+1)..max_color {
+            let number_of_conflicts = color_edges[k2].iter().filter(|&x| graph.contains_edge(q, *x)).count();
+            if number_of_conflicts == 0 {
+                // We can renumber vertex
+
+                // 1 - remove vertex from color_v
+                color_edges[color_v].retain(|&x| x != vertex);
+                color_set[color_v] -= 1;
+
+                // 2 - remove q from color k1
+                color_edges[k1].retain(|&x| x != q);
+
+                // 3 - add vertex to color k1
+                color_edges[k1].push(vertex);
+                colors.insert(vertex, k1); // Change the color of vertex to k1
+
+                // 3 - add q to color k2
+                color_edges[k2].push(q);
+                colors.insert(q, k2); // Change the color of q to k2
+                color_set[k2] += 1;
+
+                return;
+            }
+        }
+
+    }
+}
 
 fn is_good_coloring(graph: &UnGraphMap<u64, ()>, colors: &HashMap<u64, usize>) -> bool {
     for vertex in graph.nodes() {

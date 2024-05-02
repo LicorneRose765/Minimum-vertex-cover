@@ -100,6 +100,24 @@ brock200_2.clq:
   is_time_limit: false
   algorithm: clique
   comment: Multithreaded lower bound
+- date: 2024-04-27 19:46:24
+  mvc_val: 12
+  time: 0min 8s 562ms 494µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
+- date: 2024-04-27 19:51:12
+  mvc_val: 12
+  time: 0min 7s 763ms 997µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
+- date: 2024-04-27 19:52:54
+  mvc_val: 12
+  time: 0min 5s 775ms 137µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
 brock200_4.clq:
 - date: 2023-12-13 14:00:03
   mvc_val: 17
@@ -125,6 +143,12 @@ brock200_4.clq:
   is_time_limit: false
   algorithm: clique
   comment: Multithreaded lower bound
+- date: 2024-04-27 19:48:33
+  mvc_val: 17
+  time: 1min 18s 159ms 388µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
 brock400_2.clq: null
 brock400_4.clq: null
 brock800_2.clq: null
@@ -160,6 +184,18 @@ C125.9.clq:
   is_time_limit: false
   algorithm: clique
   comment: Custom graph (without multithreading)
+- date: 2024-04-27 18:52:04
+  mvc_val: 34
+  time: 0min 26s 741ms 551µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+- date: 2024-04-27 18:56:11
+  mvc_val: 34
+  time: 0min 49s 651ms 831µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
 C250.9.clq: null
 C500.9.clq: null
 C1000.9.clq: null
@@ -173,7 +209,19 @@ gen400_p0.9_65.clq: null
 gen400_p0.9_75.clq: null
 hamming8-4.clq: null
 hamming10-4.clq: null
-keller4.clq: null
+keller4.clq:
+- date: 2024-04-27 18:50:59
+  mvc_val: 11
+  time: 0min 14s 854ms 549µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+- date: 2024-04-27 18:54:51
+  mvc_val: 11
+  time: 0min 24s 36ms 882µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
 keller5.clq: null
 keller6.clq: null
 MANN_a27.clq: null
@@ -194,24 +242,24 @@ test_welsh.clq: []
 DSJC500.5.clq: []
 DSJC1000.5.clq: []
 HoG_660.clq:
-- date: 2023-12-13 13:58:52
-  mvc_val: 2
-  time: 0min 0s 0ms 128µs
-  is_time_limit: false
-  algorithm: clique
-  comment: sketch degLB + clqLB
-- date: 2023-12-14 17:53:22
-  mvc_val: 2
-  time: 0min 0s 0ms 112µs
-  is_time_limit: false
-  algorithm: clique
-  comment: clqLB with welsh powell
 - date: 2023-12-27 19:23:34
   mvc_val: 2
   time: 0min 0s 0ms 100µs
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-04-25 19:30:46
+  mvc_val: 2
+  time: 0min 0s 3ms 663µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
+- date: 2024-04-25 19:31:49
+  mvc_val: 2
+  time: 0min 0s 2ms 303µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
 HoG_28.clq:
 - date: 2023-12-27 12:41:31
   mvc_val: 3
@@ -243,26 +291,38 @@ HoG_28.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
-HoG_92.clq:
-- date: 2023-12-27 12:46:16
-  mvc_val: 5
-  time: 0min 0s 0ms 371µs
+- date: 2024-04-25 19:30:55
+  mvc_val: 3
+  time: 0min 0s 0ms 597µs
   is_time_limit: false
   algorithm: clique
-  comment: Multithreaded lower bound
+  comment: Greedy algorithm
+- date: 2024-04-25 19:31:53
+  mvc_val: 3
+  time: 0min 0s 0ms 507µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+HoG_92.clq:
 - date: 2023-12-27 12:55:38
   mvc_val: 5
   time: 0min 0s 0ms 11µs
   is_time_limit: false
   algorithm: naive_search
   comment: ''
-HoG_176.clq:
-- date: 2023-12-27 12:46:10
-  mvc_val: 4
-  time: 0min 0s 0ms 621µs
+- date: 2024-04-25 19:31:01
+  mvc_val: 5
+  time: 0min 0s 1ms 967µs
   is_time_limit: false
   algorithm: clique
-  comment: Multithreaded lower bound
+  comment: Greedy algorithm
+- date: 2024-04-25 19:31:58
+  mvc_val: 5
+  time: 0min 0s 1ms 848µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+HoG_176.clq:
 - date: 2023-12-27 12:55:31
   mvc_val: 4
   time: 0min 0s 0ms 17µs
@@ -270,12 +330,6 @@ HoG_176.clq:
   algorithm: naive_search
   comment: ''
 HoG_226.clq:
-- date: 2023-12-27 12:41:45
-  mvc_val: 3
-  time: 0min 0s 0ms 420µs
-  is_time_limit: false
-  algorithm: clique
-  comment: Multithreaded lower bound
 - date: 2023-12-27 12:55:20
   mvc_val: 3
   time: 0min 0s 0ms 7µs
@@ -289,25 +343,25 @@ HoG_226.clq:
   algorithm: naive_search
   comment: ''
 HoG_1171.clq:
-- date: 2023-12-27 16:59:58
-  mvc_val: 15
-  time: 0min 0s 88ms 54µs
-  is_time_limit: false
-  algorithm: clique
-  comment: Multithreaded lower bound
 - date: 2023-12-27 18:01:10
   mvc_val: 50
   time: 60min 0s 0ms 0µs
   is_time_limit: true
   algorithm: naive_search
   comment: ''
-HoG_1190.clq:
-- date: 2023-12-27 16:40:19
-  mvc_val: 3
-  time: 0min 0s 3ms 651µs
+- date: 2024-04-27 18:49:11
+  mvc_val: 15
+  time: 0min 0s 90ms 224µs
   is_time_limit: false
   algorithm: clique
-  comment: Multithreaded lower bound
+  comment: Welsh Powell algorithm
+- date: 2024-04-27 18:53:39
+  mvc_val: 15
+  time: 0min 0s 128ms 63µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
+HoG_1190.clq:
 - date: 2023-12-27 16:56:51
   mvc_val: 3
   time: 2min 7s 846ms 421µs
@@ -320,6 +374,18 @@ HoG_1190.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-04-27 18:50:07
+  mvc_val: 3
+  time: 0min 0s 4ms 913µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+- date: 2024-04-27 18:54:01
+  mvc_val: 3
+  time: 0min 0s 5ms 623µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
 HoG_1073.clq:
 - date: 2023-12-27 20:05:29
   mvc_val: 3
@@ -334,3 +400,15 @@ HoG_1116.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-04-27 18:46:26
+  mvc_val: 3
+  time: 0min 0s 2ms 474µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Welsh Powell algorithm
+- date: 2024-04-27 18:53:20
+  mvc_val: 3
+  time: 0min 0s 2ms 814µs
+  is_time_limit: false
+  algorithm: clique
+  comment: Greedy algorithm
