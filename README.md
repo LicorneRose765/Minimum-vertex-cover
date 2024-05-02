@@ -2,7 +2,6 @@
 
 ![Rust workflow](https://github.com/LicorneRose765/Minimum-vertex-cover/actions/workflows/rust.yml/badge.svg)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/LicorneRose765/ClockSystem/badge)](https://securityscorecards.dev/viewer/?uri=github.com/LicorneRose765/ClockSystem)  
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LicorneRose765_Minimum-vertex-cover&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=LicorneRose765_Minimum-vertex-cover)
 
 
 [![codecov](https://codecov.io/gh/LicorneRose765/Minimum-vertex-cover/graph/badge.svg?token=AC37S9XQPX)](https://codecov.io/gh/LicorneRose765/Minimum-vertex-cover)
@@ -10,6 +9,18 @@
 Comparison of algorithms (exact and heuristic) for the minimum vertex cover problem
 
 Documentation can be found [here](https://licornerose765.github.io/Minimum-vertex-cover/)
+
+## Usage
+
+### Run
+To run the algorithms, you can either use cargo or use `run.sh` script.  
+```shell
+sh run.sh [-c] <algorithm> <file_name> <time_limit> 
+```
+* `-c` : If you want to run the algorithm on the complement of the graph.
+* `<algorithm>` : The algorithm you want to run. It can be `bnb`, `numvc` or `naive_search`.
+* `<file_name>` : The name of the file in the resources/graphs folder.
+* `<time_limit>` : The time limit in seconds.
 
 ## Algorithms
 ### Exact algorithms
@@ -24,7 +35,6 @@ use : `cargo run -r --bin bnb <file_name> <time_limit> [-c]`
 You can find the paper [here](	https://doi.org/10.1613/jair.3907)  
 use :`cargo run -r --bin numvc <file_name> <time_limit> [-c]` 
 
-**Remark**: Time limit is in seconds and filename is the name of a file in the resources/graphs folder.
 
 ## Bins 
 * **naive_method**: Find the MVC of the graph using the naive method.   

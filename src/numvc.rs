@@ -1,4 +1,5 @@
 use petgraph::prelude::UnGraphMap;
+use rand::rngs::ThreadRng;
 use rand::seq::IteratorRandom;
 
 use crate::Clock;
@@ -13,6 +14,9 @@ pub fn numvc_algorithm(
     optimal: Option<u64>,
 ) -> Vec<u64> {
     println!("Starting NuMVC algorithm");
+    
+    // Initialize random number generator
+    let mut rng = rand::thread_rng();
     // Params
     let mut iter = 1; // Number of iterations
     if threshold == 0.0 {
@@ -44,7 +48,7 @@ pub fn numvc_algorithm(
             println!("Iteration {}, best solution : {}", iter, best_solution.len());
         }
         if is_vertex_cover_with_weight(graph, &solution_age) {
-            best_solution = solution.clone();
+            best_solution.clone_from(&solution);
             if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {
                 // We found the optimal solution
                 println!("Found optimal solution with {} iterations", iter);
@@ -65,7 +69,7 @@ pub fn numvc_algorithm(
 
 
         // Select a vertex to add
-        let v = pick_new_vertex(graph, &dscores, &confchange, &solution_age);
+        let v = pick_new_vertex(graph, &dscores, &confchange, &solution_age, &mut rng);
 
         /* C := C plus {v}, confChange(z) := 1 for each z in N(v); */
         add(graph, &mut solution, &mut solution_age, &mut dscores, &mut confchange, v, iter);
@@ -311,12 +315,12 @@ fn compute_greedy_vc(
 ///
 /// # Panics
 /// If there is no uncovered edge in the graph. (This can't happen in the context of the NuMVC algorithm)
-fn get_one_uncovered_edge(graph: &UnGraphMap<u64, i32>, solution_age: &[i32]) -> (u64, u64) {
+fn get_one_uncovered_edge(graph: &UnGraphMap<u64, i32>, solution_age: &[i32], rng: &mut ThreadRng) -> (u64, u64) {
     let edges = graph.all_edges()
         .filter(|(i, j, _)| solution_age[*i as usize] <= 0 && solution_age[*j as usize] <= 0);
 
     // Select randomly an edge from the iterator
-    let edge: (u64, u64, &i32) = edges.choose(&mut rand::thread_rng()).unwrap();
+    let edge: (u64, u64, &i32) = edges.choose(rng).unwrap();
 
     (edge.0, edge.1)
 }
@@ -342,8 +346,9 @@ fn pick_new_vertex(
     dscores: &[i32],
     confchange: &[u64],
     solution_old: &[i32],
+    rng: &mut ThreadRng
 ) -> u64 {
-    let (u, v) = get_one_uncovered_edge(graph, solution_old);
+    let (u, v) = get_one_uncovered_edge(graph, solution_old, rng);
 
     if confchange[u as usize] == 0 {
         v
@@ -711,7 +716,7 @@ mod numvc_tests {
         solution_age[0] = 1;
         solution_age[1] = 1;
 
-        let (i, j) = get_one_uncovered_edge(&graph, &solution_age);
+        let (i, j) = get_one_uncovered_edge(&graph, &solution_age, &mut rand::thread_rng());
         assert_ne!(i, j);
         assert_eq!(-1, solution_age[i as usize]);
         assert_eq!(-1, solution_age[j as usize]);
@@ -731,7 +736,7 @@ mod numvc_tests {
 
         let solution_age = vec![-1, -1, 1, 1, 1];
 
-        let (i, j) = get_one_uncovered_edge(&graph, &solution_age);
+        let (i, j) = get_one_uncovered_edge(&graph, &solution_age, &mut rand::thread_rng());
         assert_eq!(0, i);
         assert_eq!(1, j);
     }
@@ -752,12 +757,12 @@ mod numvc_tests {
         let solution_age = vec![1, 1, -1, -1, -1]; // 0, 1 in the solution
 
         confchange[2] = 0;
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(4, res);
 
         confchange[2] = 1;
         confchange[4] = 0;
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(2, res);
     }
 
@@ -777,23 +782,23 @@ mod numvc_tests {
         let mut solution_age = vec![1, 1, 0, 0, 0]; // 0, 1 in the solution
 
         // 1 : vertex 2 with bigger dscore
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(2, res);
 
         // 2 : vertex 4 with bigger dscore
         dscores[4] = 3;
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(4, res);
 
         // 3 : 2 and 4 with the same dscore but 4 is older
         dscores[4] = 2;
         solution_age[2] = -1;
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(4, res);
 
         // 4 : 2 and 4 with the same dscore but 2 is older
         solution_age[4] = -3;
-        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age);
+        let res = pick_new_vertex(&graph, &dscores, &confchange, &solution_age, &mut rand::thread_rng());
         assert_eq!(2, res);
     }
 
