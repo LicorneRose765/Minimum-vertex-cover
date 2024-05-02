@@ -3,13 +3,14 @@ use std::env;
 use vertex::{numvc, run_algorithm};
 use vertex::graph_utils::load_clq_file;
 
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() >= 3 && args.len() <= 4 {
         let graph = load_clq_file(&format!("src/resources/graphs/{}", args[1]))
             .expect("Error while loading graph");
 
-        let time_limit = match (&args[2]).parse::<u64>() {
+        let time_limit = match args[2].parse::<u64>() {
             Ok(t) => t,
             Err(_) => {
                 eprintln!("Error: time limit must be a positive integer");

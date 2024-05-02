@@ -5,7 +5,6 @@ use std::time::Duration;
 
 use itertools::Itertools;
 use petgraph::prelude::UnGraphMap;
-use round::round;
 use serde::{Deserialize, Serialize};
 
 use crate::branch_and_bound::b_and_b;
@@ -18,6 +17,10 @@ pub mod mvcgraph;
 pub mod errors;
 mod numvc;
 mod branch_and_bound;
+
+
+/// Type alias for an algorithm that takes an UnGraphMap as input and computes the minimum vertex cover of the graph.
+type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>);
 
 /// Naïve algorithm that searches for the minimum vertex cover of a given graph.
 ///
@@ -81,7 +84,7 @@ pub fn naive_search(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params: Opt
 /// ```
 pub fn run_algorithm(graph_id: &str,
                      graph: &UnGraphMap<u64, ()>,
-                     f: &dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>),
+                     f: &Algorithm,
                      params: Option<&[f64]>,
                      time_limit: u64,
                      cmpl: bool,

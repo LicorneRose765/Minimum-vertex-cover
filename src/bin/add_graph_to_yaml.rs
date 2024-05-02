@@ -24,7 +24,7 @@ pub fn update_graph_info() {
                 }
             };
             println!("{}: {} vertices, {} edges", path_str, graph.node_count(), graph.edge_count());
-            let result = add_graph_to_yaml(path_str.split("/").last().unwrap(),
+            let result = add_graph_to_yaml(path_str.split('/').last().unwrap(),
                               "clq",
                               &graph,
                               "src/resources/graph_data.yml");

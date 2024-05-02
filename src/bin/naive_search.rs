@@ -9,7 +9,7 @@ fn main() {
         let graph = load_clq_file(&format!("src/resources/graphs/{}", args[1]))
             .expect("Error while loading graph");
 
-        let time_limit = match (&args[2]).parse::<u64>() {
+        let time_limit = match args[2].parse::<u64>() {
             Ok(t) => t,
             Err(_) => {
                 eprintln!("Error: time limit must be a positive integer");

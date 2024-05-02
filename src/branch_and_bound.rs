@@ -136,8 +136,8 @@ fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     if edges_left == 0 {
         selected_vertexes.len() as u64
     } else {
-        let estim = (edges_left / graph.neighbors(next_vertex).count()) as f64;
-        (selected_vertexes.len() as f64 + estim).floor() as u64
+        let estimation = (edges_left / graph.neighbors(next_vertex).count()) as f64;
+        (selected_vertexes.len() as f64 + estimation).floor() as u64
     }
 }
 
@@ -227,8 +227,8 @@ fn _renumber(graph: &UnGraphMap<u64, ()> ,
             color_v: usize,
             max_color: usize,
             colors: &mut HashMap<u64, usize>,
-            color_set: &mut Vec<usize>,
-            color_edges: &mut Vec<Vec<u64>>,
+            color_set: &mut [usize],
+            color_edges: &mut [Vec<u64>],
 ) {
     for k1 in 1..max_color-1 {
         // If a neighbor of vertex has the same color as vertex, we renumber vertex
@@ -289,6 +289,7 @@ fn is_good_coloring(graph: &UnGraphMap<u64, ()>, colors: &HashMap<u64, usize>) -
 }
 
 #[allow(dead_code)]
+#[allow(clippy::needless_range_loop)]
 fn welch_powell(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
     // sort vertices by decreasing degree
     let sorted_vertices = {
