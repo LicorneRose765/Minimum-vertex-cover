@@ -143,6 +143,7 @@ fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
 
 #[allow(dead_code)]
 fn sat_lb(_graph: &UnGraphMap<u64, ()>) -> u64 {
+    // :(
     todo!("Implement lower bound based on satisfiability")
 }
 

@@ -17,6 +17,7 @@ pub mod mvcgraph;
 pub mod errors;
 mod numvc;
 mod branch_and_bound;
+mod samvc;
 
 
 /// Type alias for an algorithm that takes an UnGraphMap as input and computes the minimum vertex cover of the graph.
@@ -207,6 +208,18 @@ pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
 
     assert!(is_vertex_cover(graph, &res));
 
+    (res.len() as u64, res)
+}
+
+pub fn samvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
+    // TODO : add parameters
+    
+    clock.restart();
+    let res = samvc::samvc_algorithm(graph, clock, optimal);
+    clock.stop_timer();
+    
+    assert!(is_vertex_cover(graph, &res));
+    
     (res.len() as u64, res)
 }
 
