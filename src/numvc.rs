@@ -297,9 +297,10 @@ fn compute_greedy_vc(
     iter: &i32,
     dscores: &mut [i32],
 ) {
+    let mut confchange = vec![1; graph.node_count()];
     while !is_vertex_cover_with_weight(graph, solution_age) {
         let v = get_vertex_with_highest_dscore(dscores);
-        add(graph, solution, solution_age, dscores, &mut vec![1; graph.node_count()], v, *iter);
+        add(graph, solution, solution_age, dscores, &mut confchange, v, *iter);
     }
 }
 

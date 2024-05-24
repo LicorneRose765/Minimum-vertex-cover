@@ -15,10 +15,10 @@ use crate::numvc::{add_weight_to_graph, numvc_algorithm};
 pub mod graph_utils;
 pub mod mvcgraph;
 pub mod errors;
+pub mod maxsat;
 mod numvc;
 mod branch_and_bound;
 mod samvc;
-
 
 /// Type alias for an algorithm that takes an UnGraphMap as input and computes the minimum vertex cover of the graph.
 type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>);

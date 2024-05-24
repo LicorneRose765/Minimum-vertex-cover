@@ -6,6 +6,7 @@ use petgraph::prelude::UnGraphMap;
 
 use crate::Clock;
 use crate::graph_utils::{complement, copy_graph, get_vertex_with_max_degree};
+use crate::maxsat::{Clause, Literal, MaxSat};
 
 pub fn b_and_b(_graph: &UnGraphMap<u64, ()>,
                g: &UnGraphMap<u64, ()>,
@@ -141,12 +142,6 @@ fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     }
 }
 
-#[allow(dead_code)]
-fn sat_lb(_graph: &UnGraphMap<u64, ()>) -> u64 {
-    // :(
-    todo!("Implement lower bound based on satisfiability")
-}
-
 
 fn clq_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     // 1) Get the complement of the graph
@@ -159,7 +154,7 @@ fn clq_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     let compl = complement(graph);
 
     // 2) Find a greedy coloring of the complement
-    let color_set = welch_powell(&compl);
+    let color_set = welch_powell(&compl).0;
 
 
     // Adds the number of nodes in each color minus 1 = lower bound. If a value is 0, change it to 1
@@ -289,9 +284,14 @@ fn is_good_coloring(graph: &UnGraphMap<u64, ()>, colors: &HashMap<u64, usize>) -
     true
 }
 
+/// Welsh-Powell algorithm to color a graph.  
+/// 
+/// This implementation returns a tuple containing two vectors : 
+/// - The first vector is a list of the number of vertices in each color.
+/// - The second vector is a list of vertices in each color, e.g. `color_edges[i]` = list of vertices colored with color i.
 #[allow(dead_code)]
 #[allow(clippy::needless_range_loop)]
-fn welch_powell(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
+fn welch_powell(graph: &UnGraphMap<u64, ()>) -> (Vec<usize>, Vec<Vec<u64>>) {
     // sort vertices by decreasing degree
     let sorted_vertices = {
         let mut vertices: Vec<_> = graph.nodes().collect();
@@ -309,6 +309,8 @@ fn welch_powell(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
     };
     // Array such as res[i] = j means that color j colored i vertices
     let mut res: Vec<usize> = Vec::new();
+    // List of colors where colorSet[i] = list of vertices colored with color i
+    let mut color_edges: Vec<Vec<u64>> = Vec::new();
 
     let mut vertex_to_index = HashMap::new();
     for (i, vertex) in sorted_vertices.iter().enumerate() {
@@ -334,6 +336,7 @@ fn welch_powell(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
         // Color the biggest vertex
         color[biggest_index as usize] = current_color;
         res.push(1);
+        color_edges.push(vec![sorted_vertices[biggest_index as usize]]); // Add the vertex to the color_edges
 
         assert_eq!(color.len(), sorted_vertices.len());
         // Color vertices that are not neighbors of vertex colored with current_color
@@ -351,13 +354,63 @@ fn welch_powell(graph: &UnGraphMap<u64, ()>) -> Vec<usize> {
                 if can_color {
                     color[i] = current_color;
                     res[current_color as usize] += 1;
+                    color_edges[current_color as usize].push(sorted_vertices[i]);
                 }
             }
         }
         current_color += 1;
     }
 
-    res
+    (res, color_edges)
+}
+
+
+// ====================== SATLB ======================
+#[allow(dead_code)]
+fn sat_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
+    // :(
+    
+    // This lower bound works this way : 
+    // 1) Separate the graph into disjoint cliques => called P 
+    // 2) Encode the graph into a partial MAXSAT problem based on P
+    // 3) Find the number of inconsistent subset of soft clauses in the MAXSAT problem
+    // 4) return |P| - |inconsistent subsets|
+    
+    // 1
+    let cliques = welch_powell(graph).1;
+    // 2
+    let formula = encode_maxsat(graph, cliques);
+    
+    // 3
+    
+    0
+}
+
+fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxSat {
+    // 1. Each vertex is a variable
+    // 2. Each edge (i, j) form a hard clause not i or not j
+    // 3. Each clique (i, j, k) form a soft clause i or j or k.
+   
+    let mut maxsat = MaxSat::new();
+    
+    // 2 : each edge form a hard clause : not a or not b
+    for (a, b, _) in graph.all_edges() {
+        let mut clause = Clause::new();
+        clause.add_literal(Literal::Negative(a));
+        clause.add_literal(Literal::Negative(b));
+        maxsat.add_hard_clause(clause);
+    }
+    
+    // 3 : each clique form a soft clause : x_i OR x_j OR x_k OR ...
+    for clique in colors {
+        let mut clause = Clause::new();
+        for vertex in clique {
+            clause.add_literal(Literal::Positive(vertex));
+        }
+        maxsat.add_soft_clause(clause);
+    }
+    
+    maxsat
 }
 
 #[cfg(test)]
@@ -439,6 +492,26 @@ mod branch_and_bound_tests {
         let g = load_clq_file("src/resources/graphs/test_welsh.clq").unwrap();
 
         let res = welch_powell(&g);
-        assert_eq!(res, vec![3, 5, 3]);
+        assert_eq!(res.0, vec![3, 5, 3]);
+    }
+    
+    #[test]
+    fn test_encode_sat() {
+        // House shaped graph
+        let mut graph = UnGraphMap::<u64, ()>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(0, 2, ());
+        graph.add_edge(1, 3, ());
+        graph.add_edge(2, 4, ());
+        graph.add_edge(3, 4, ());
+        
+        let colors = welch_powell(&graph).1;
+        let maxsat = encode_maxsat(&graph, colors);
+        
+        assert_eq!(maxsat.num_hard_clauses(), 5);
+        assert_eq!(maxsat.num_soft_clauses(), 3);
     }
 }
