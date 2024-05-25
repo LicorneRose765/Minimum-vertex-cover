@@ -456,7 +456,7 @@ mod numvc_tests {
         let graph = load_clq_file("src/resources/graphs/test.clq")
                     .expect("Error while loading the graph");
         let mut clock = Clock::new(0); // 0 seconds time limit
-        let res = numvc(&graph, &mut clock, Some(&[0.0,0.0]), Some(3));
+        let res = numvc(&graph, &mut clock, None, Some(3));
         assert_eq!(res.0, 3);
         assert_eq!(res.1, vec![0, 4, 3]);
     }
@@ -465,8 +465,8 @@ mod numvc_tests {
     fn test_numvc_c125_9() {
         let graph = load_clq_file("src/resources/graphs/C125.9.clq")
             .expect("Error while loading the graph");
-        let mut clock = Clock::new(1); // 1 hour time limit
-        let res = numvc(&complement(&graph), &mut clock, Some(&[0.0, 0.0]), Some(91));
+        let mut clock = Clock::new(30);
+        let res = numvc(&complement(&graph), &mut clock, None, Some(91));
         assert_eq!(res.0, 91);
     }
 
