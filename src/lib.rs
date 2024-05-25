@@ -178,7 +178,6 @@ pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params:
 /// - `clock`: The clock used to measure the time taken by the algorithm and stop it if it reaches the time limit
 /// - `params`: The parameters of the algorithm. It is a vector of 2 elements. The first element is the threshold and the second element is rho.
 /// - `optimal`: The optimal value of the minimum vertex cover. It is used to stop the algorithm if it finds a vertex cover with this value.
-/// You can set it to a negative value if you don't want to use it and let the algorithm run until it reaches the time limit.
 ///
 /// # Example
 /// ```rust
@@ -195,32 +194,93 @@ pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params:
 /// assert_eq!(res.1, vec![0, 4, 3]);
 /// ```
 pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
-    let mut threshold = 0.0;
-    let mut rho = 0.0;
+    // ======== Default parameters ========
+    let mut threshold = 0.5 * graph.node_count() as f64;
+    let mut rho = 0.3;
+    // ======== Parameters ========
     if params.is_some() && params.unwrap().len() == 2 {
         threshold = params.unwrap()[0];
         rho = params.unwrap()[1];
     }
+    // ======== Algorithm ========
     let mut g = add_weight_to_graph(graph, 1);
     clock.restart();
     let res = numvc_algorithm(&mut g, clock, threshold, rho, optimal);
     clock.stop_timer();
 
     assert!(is_vertex_cover(graph, &res));
-
     (res.len() as u64, res)
 }
 
+/// Simulated Annealing based algorithm that search for the minimum vertex cover of a given graph.
+///
+/// This algorithm use 3 parameters that have default values : 
+/// * initial_temp = 50.0
+/// * final_temp = 0.01
+/// * cooling_rate = 0.95
+///
+/// # Parameters
+/// - `graph`: The graph on which we want to compute the vertex cover
+/// - `clock`: The clock used to measure the time taken by the algorithm and stop it if it reaches the time limit
+/// - `params`: The parameters of the algorithm. It is a vector of 3 elements. 
+/// The first element is the initial temperature, the second element is the final temperature and the third element is the cooling rate.
+/// - `optimal`: The optimal value of the minimum vertex cover. It is used to stop the algorithm if it finds a vertex cover with this value.
+///
+/// # Example
+/// ```rust
+/// use petgraph::prelude::UnGraphMap;
+/// use vertex::{Clock, samvc};
+/// use vertex::graph_utils::load_clq_file;
+///
+/// let graph = load_clq_file("src/resources/graphs/test.clq")
+///       .expect("Error while loading the graph");
+/// let mut clock = Clock::new(3600); // 1 hour time limit
+/// let res = samvc(&graph, &mut clock, Some(&vec![50.0, 0.01, 0.95]), Some(3));
+///
+/// assert_eq!(res.0, 3);
+/// assert_eq!(res.1, vec![0, 4, 3]);
+/// ```
 pub fn samvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
-    // TODO : add parameters
-    
+    // ======== Default parameters ========
+    let mut initial_temp = 50.0;
+    let mut final_temp = 0.01;
+    let mut cooling_rate = 0.95;
+    // ======== Parameters ========
+    if params.is_some() && params.unwrap().len() == 3 {
+        initial_temp = params.unwrap()[0];
+        final_temp = params.unwrap()[1];
+        cooling_rate = params.unwrap()[2];
+    }
+    let max_call = 10;
+    // Test : Run the algorithm until 10 call without improvement
+    let mut best_solution = Vec::new();
+
+    let mut call = 0;
     clock.restart();
-    let res = samvc::samvc_algorithm(graph, clock, optimal);
+    while call < max_call {
+        // Call the algorithm max_call time without improvement
+        
+        let res = if best_solution.is_empty() {
+            samvc::samvc_algorithm(graph, clock, optimal, final_temp, initial_temp, cooling_rate, None)
+        } else {
+            samvc::samvc_algorithm(graph, clock, optimal, final_temp, initial_temp, cooling_rate, Some(best_solution.clone()))
+        };
+        
+
+        if is_vertex_cover(graph, &res) {
+            // If we found a better solution, we replace it and reset the call counter
+            if best_solution.is_empty() || res.len() < best_solution.len() {
+                best_solution = res;
+                call = 0;
+            } else {
+                // We did not find a better solution, we increment the call counter
+                call += 1;
+            }
+        }
+    }
     clock.stop_timer();
-    
-    assert!(is_vertex_cover(graph, &res));
-    
-    (res.len() as u64, res)
+
+    (best_solution.len() as u64, best_solution)
 }
 
 /// Struct representing the time taken by an algorithm (in minutes, seconds, milliseconds and microseconds)

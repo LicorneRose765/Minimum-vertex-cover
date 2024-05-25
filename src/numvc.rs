@@ -4,28 +4,17 @@ use rand::seq::IteratorRandom;
 
 use crate::Clock;
 
-// To use it here.
-#[allow(dead_code)]
 pub fn numvc_algorithm(
     graph: &mut UnGraphMap<u64, i32>,
     clock: &mut Clock,
-    mut threshold: f64,
-    mut rho: f64,
+    threshold: f64,
+    rho: f64,
     optimal: Option<u64>,
 ) -> Vec<u64> {
-    println!("Starting NuMVC algorithm");
-    
     // Initialize random number generator
     let mut rng = rand::thread_rng();
     // Params
     let mut iter = 1; // Number of iterations
-    if threshold == 0.0 {
-        // Default value of threshold is 0.5 * |V|
-        threshold = 0.5 * graph.node_count() as f64;
-    }
-    if rho == 0.0 {
-        rho = 0.3;
-    }
     // Initialize dscores of vertices
     let mut dscores: Vec<i32> = vec![0; graph.node_count()];
     let mut solution: Vec<u64> = vec![];
