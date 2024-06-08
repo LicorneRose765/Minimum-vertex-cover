@@ -29,7 +29,8 @@ type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option
 /// # Example
 /// ```rust
 /// use petgraph::prelude::UnGraphMap;
-/// use vertex::{Clock, naive_search};
+/// use vertex::naive_search;
+/// use vertex::result_utils::Clock;
 ///
 /// let mut graph = Box::new(UnGraphMap::<u64, ()>::new());
 /// for i in 0..4 {
@@ -138,8 +139,9 @@ pub fn run_algorithm(graph_id: &str,
 /// # Example
 /// ```rust
 /// use petgraph::prelude::UnGraphMap;
-/// use vertex::{Clock, branch_and_bound};
+/// use vertex::branch_and_bound;
 /// use vertex::graph_utils::load_clq_file;
+/// use vertex::result_utils::Clock;
 ///
 /// let graph = load_clq_file("src/resources/graphs/test.clq")
 ///             .expect("Error while loading graph");
@@ -178,8 +180,10 @@ pub fn branch_and_bound(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, _params:
 /// # Example
 /// ```rust
 /// use petgraph::prelude::UnGraphMap;
-/// use vertex::{Clock, numvc};
+/// use vertex::numvc;
 /// use vertex::graph_utils::load_clq_file;
+/// use vertex::result_utils::Clock;
+///
 ///
 /// let graph = load_clq_file("src/resources/graphs/test.clq")
 ///             .expect("Error while loading the graph");
@@ -225,8 +229,9 @@ pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
 /// # Example
 /// ```rust
 /// use petgraph::prelude::UnGraphMap;
-/// use vertex::{Clock, samvc};
+/// use vertex::samvc;
 /// use vertex::graph_utils::load_clq_file;
+/// use vertex::result_utils::Clock;
 ///
 /// let graph = load_clq_file("src/resources/graphs/test.clq")
 ///       .expect("Error while loading the graph");

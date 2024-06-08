@@ -461,10 +461,31 @@ pub fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxS
 #[cfg(test)]
 mod maxsat_tests {
     use std::collections::{HashSet, VecDeque};
+    use petgraph::graphmap::UnGraphMap;
 
-    use crate::maxsat::{Clause, Literal, MaxSat};
+    use crate::maxsat::{Clause, encode_maxsat, Literal, MaxSat};
     use crate::maxsat::Literal::Positive;
 
+    #[test]
+    fn test_encode_sat() {
+        // House shaped graph 
+        let mut graph = UnGraphMap::<u64, ()>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(0, 2, ());
+        graph.add_edge(1, 3, ());
+        graph.add_edge(2, 4, ());
+        graph.add_edge(3, 4, ());
+
+        let cliques = vec![vec![0, 1, 2], vec![3]];
+        let maxsat = encode_maxsat(&graph, cliques);
+        
+        assert_eq!(maxsat.num_hard_clauses(), 5);
+        assert_eq!(maxsat.num_soft_clauses(), 2);
+    }
+    
     #[test]
     fn test_propagate() {
         // Create a simple MaxSat instance.

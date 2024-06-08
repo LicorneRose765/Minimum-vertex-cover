@@ -170,7 +170,7 @@ impl Display for MVCResult {
 /// # Example
 /// ```rust
 /// use std::time::Duration;
-/// use vertex::Clock;
+/// use vertex::result_utils::Clock;
 ///
 /// let mut clock = Clock::new(3600); // 1 hour time limit
 ///
@@ -246,7 +246,7 @@ impl Clock {
     /// # Example
     /// ```rust
     /// use std::time::Duration;
-    /// use vertex::Clock;
+    /// use vertex::result_utils::Clock;
     ///
     /// let mut clock = Clock::new(3600);
     ///

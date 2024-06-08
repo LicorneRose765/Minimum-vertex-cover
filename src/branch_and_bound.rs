@@ -474,24 +474,6 @@ mod branch_and_bound_tests {
         let res = welch_powell(&g);
         assert_eq!(res.0, vec![3, 5, 3]);
     }
-    
-    #[test]
-    fn test_encode_sat() {
-        // House shaped graph 
-        let mut graph = UnGraphMap::<u64, ()>::new();
-        for i in 0..5 {
-            graph.add_node(i);
-        }
-        graph.add_edge(0, 1, ());
-        graph.add_edge(0, 2, ());
-        graph.add_edge(1, 3, ());
-        graph.add_edge(2, 4, ());
-        graph.add_edge(3, 4, ());
-        
-        let colors = welch_powell(&graph).1;
-        let maxsat = encode_maxsat(&graph, colors);
-        
-    }
 
     #[test]
     fn test_sat_lb() {
