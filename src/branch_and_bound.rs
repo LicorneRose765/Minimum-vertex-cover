@@ -31,7 +31,7 @@ pub fn b_and_b(_graph: &UnGraphMap<u64, ()>,
     let (v, _max_deg) = get_vertex_with_max_degree(&subgraph, None);
     clock.exit_subroutine("max_deg").expect("Error while exiting subroutine");
 
-    if vertex_cover.len() as u64 + compute_lb(copy_graph(&subgraph), clock)  >= upper_bound {
+    if vertex_cover.len() as u64 + compute_lb(copy_graph(&subgraph))  >= upper_bound {
         // We can't find a better solution in this branch, we stop and return the best known solution
         return (upper_bound, upper_bound_vc.clone());
     }
@@ -89,27 +89,31 @@ pub fn b_and_b(_graph: &UnGraphMap<u64, ()>,
     }
 }
 
-fn compute_lb(graph: UnGraphMap<u64, ()>, clock: &mut Clock) -> u64 {
+fn compute_lb(graph: UnGraphMap<u64, ()>) -> u64 {
     let graph = Arc::new(graph);
 
     // First thread : deg_lb
     let shared_deg = Arc::clone(&graph);
     let shared_clq = Arc::clone(&graph);
+    let shared_sat = Arc::clone(&graph);
     let handle_deg = std::thread::spawn(move || {
         deg_lb(&shared_deg)
     });
-
     let handle_clq = std::thread::spawn(move || {
         clq_lb(&shared_clq)
     });
-    clock.enter_subroutine("deg_lb");
+    let handle_sat = std::thread::spawn(move || {
+        sat_lb(&shared_sat)
+    });
+    
     let deg_lb = handle_deg.join().unwrap();
-    clock.exit_subroutine("deg_lb").expect("Error while exiting subroutine");
-
-    clock.enter_subroutine("clq_lb");
     let clq_lb = handle_clq.join().unwrap();
-    clock.exit_subroutine("clq_lb").expect("Error while exiting subroutine");
-    max(deg_lb, clq_lb)
+    let sat_lb = handle_sat.join().unwrap();
+    
+    if deg_lb > sat_lb && deg_lb > clq_lb {
+        println!("SAT LB : {}, CLQ_LB : {}, DEG_LB {}", sat_lb, clq_lb, deg_lb);
+    }
+    max(deg_lb, max(clq_lb, sat_lb))
 }
 
 fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
@@ -366,7 +370,6 @@ fn welch_powell(graph: &UnGraphMap<u64, ()>) -> (Vec<usize>, Vec<Vec<u64>>) {
 
 
 // ====================== SATLB ======================
-#[allow(dead_code)]
 fn sat_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     // :(
     
@@ -374,16 +377,20 @@ fn sat_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     // 1) Separate the graph into disjoint cliques => called P 
     // 2) Encode the graph into a partial MAXSAT problem based on P
     // 3) Find the number of inconsistent subset of soft clauses in the MAXSAT problem
-    // 4) return |P| - |inconsistent subsets|
+    // 4) return |V| - |P| + |inconsistent subsets|
     
     // 1
-    let cliques = welch_powell(graph).1;
+    let cliques = welch_powell(&complement(graph)).1;
+    let p = cliques.len();
     // 2
-    let formula = encode_maxsat(graph, cliques);
+    let mut formula = encode_maxsat(graph, cliques);
     
     // 3
+    let nbr_of_inconsistent_subsets = formula.find_inconsistent_subsets();
     
-    0
+    
+    // 4
+    graph.node_count() as u64 - p as u64 + nbr_of_inconsistent_subsets
 }
 
 fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxSat {
@@ -497,7 +504,7 @@ mod branch_and_bound_tests {
     
     #[test]
     fn test_encode_sat() {
-        // House shaped graph
+        // House shaped graph 
         let mut graph = UnGraphMap::<u64, ()>::new();
         for i in 0..5 {
             graph.add_node(i);
@@ -513,5 +520,41 @@ mod branch_and_bound_tests {
         
         assert_eq!(maxsat.num_hard_clauses(), 5);
         assert_eq!(maxsat.num_soft_clauses(), 3);
+    }
+
+    #[test]
+    fn test_sat_lb() {
+        // Example from the report
+        let mut graph = UnGraphMap::<u64, ()>::new();
+        for i in 0..6 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(0, 2, ());
+        graph.add_edge(1,2, ());
+        graph.add_edge(1, 3, ());
+        graph.add_edge(2, 4, ());
+        graph.add_edge(3, 4, ());
+        graph.add_edge(4, 5, ());
+        graph.add_edge(3,5,());
+        let res = sat_lb(&graph);
+        assert_eq!(res, 4);
+    }
+    
+    #[test]
+    fn test_sat_lb2() {
+        // House shaped graph 
+        let mut graph = UnGraphMap::<u64, ()>::new();
+        for i in 0..5 {
+            graph.add_node(i);
+        }
+        graph.add_edge(0, 1, ());
+        graph.add_edge(0, 2, ());
+        graph.add_edge(1, 3, ());
+        graph.add_edge(2, 4, ());
+        graph.add_edge(3, 4, ());
+        
+        let res = sat_lb(&graph);
+        assert_eq!(res, 3);
     }
 }
