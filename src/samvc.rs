@@ -20,7 +20,7 @@ pub fn samvc_algorithm(
     let rng = &mut rand::thread_rng();
     // ======= Part 0 : Parameters =======
     let mut temperature = initial_temperature; // Initial temperature
-    let iter_per_temp = graph.node_count() * 10; // Number of iterations per temperature
+    let iter_per_temp = graph.node_count()*10; // Number of iterations per temperature
 
     // ======= Part 1 : Initialization =======
     let mut current_solution;

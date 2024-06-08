@@ -33,9 +33,6 @@ pub fn numvc_algorithm(
 
     // Main loop
     while !clock.is_time_up() {
-        if iter % 1000 == 0 {
-            println!("Iteration {}, best solution : {}", iter, best_solution.len());
-        }
         if is_vertex_cover_with_weight(graph, &solution_age) {
             best_solution.clone_from(&solution);
             if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {

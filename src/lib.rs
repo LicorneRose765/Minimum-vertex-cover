@@ -242,9 +242,9 @@ pub fn numvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
 /// ```
 pub fn samvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f64]>, optimal: Option<u64>) -> (u64, Vec<u64>) {
     // ======== Default parameters ========
-    let mut initial_temp = 50.0;
+    let mut initial_temp = 100.0;
     let mut final_temp = 0.01;
-    let mut cooling_rate = 0.95;
+    let mut cooling_rate = 0.995;
     // ======== Parameters ========
     if params.is_some() && params.unwrap().len() == 3 {
         initial_temp = params.unwrap()[0];
@@ -272,6 +272,10 @@ pub fn samvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
             if best_solution.is_empty() || res.len() < best_solution.len() {
                 best_solution = res;
                 call = 0;
+                
+                if optimal.is_some() && best_solution.len() as u64 == optimal.unwrap() {
+                    break;
+                }
             } else {
                 // We did not find a better solution, we increment the call counter
                 call += 1;
