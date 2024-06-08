@@ -1,3 +1,5 @@
+//! Module containing custom error types for the project.
+
 use std::error::Error;
 use std::fmt;
 use std::io;
@@ -25,6 +27,7 @@ impl fmt::Display for ClockError {
 
 impl Error for ClockError {}
 
+/// Error returned when the clq file is not formatted correctly.
 #[derive(Debug)]
 pub struct InvalidClqFileFormat {
     pub message: String,
@@ -59,6 +62,7 @@ impl From<ParseIntError> for InvalidClqFileFormat {
 }
 
 
+/// Error enum containing all the possible error types that can occur while parsing a YAML file.
 pub enum YamlError {
     /// Error returned when there is an error while creating / searching a file.
     IoError(String, io::Error),

@@ -24,6 +24,7 @@
 //!```
 use std::collections::{HashSet, VecDeque};
 use std::hash::Hash;
+
 use petgraph::graphmap::UnGraphMap;
 
 /// A literal is a variable or its negation.
@@ -125,6 +126,10 @@ impl Clone for Clause {
     }
 }
 
+/// Structure representing a MaxSat instance. A MaxSat instance is a set of hard clauses and a set of soft clauses.
+///
+/// This structure is used in the satLB lower bound of the BnB algorithm. Using this structure on
+/// instances that are not encoded from a graph may lead to unexpected results.
 #[derive(Debug, Default)]
 pub struct MaxSat {
     hard_clauses: Vec<Clause>,
@@ -456,6 +461,7 @@ pub fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxS
 #[cfg(test)]
 mod maxsat_tests {
     use std::collections::{HashSet, VecDeque};
+
     use crate::maxsat::{Clause, Literal, MaxSat};
     use crate::maxsat::Literal::Positive;
 

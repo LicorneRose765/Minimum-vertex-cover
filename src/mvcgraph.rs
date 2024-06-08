@@ -1,3 +1,4 @@
+//! [DEPRECATED]
 //! This module contains a custom graph implementation that is used to represent undirected graphs.
 //! We wanted to test if it was faster than the petgraph implementation. It is not.
 use std::collections::HashMap;
@@ -5,6 +6,7 @@ use std::fmt::Error;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+#[allow(dead_code)]
 pub fn load_clq_file(path: &str) -> Result<MVCGraph, Box<dyn std::error::Error>> {
     let file = match File::open(path) {
         Ok(file) => file,
@@ -69,6 +71,7 @@ pub struct MVCGraph {
     size: u64,
 }
 
+#[allow(dead_code)]
 impl MVCGraph {
     /// Create an empty graph
     pub fn new() -> Self {

@@ -3,8 +3,9 @@ use std::env;
 use petgraph::prelude::UnGraphMap;
 use round::round;
 
-use vertex::{branch_and_bound, Clock, MVCResult};
+use vertex::branch_and_bound;
 use vertex::graph_utils::{complement, is_vertex_cover, load_clq_file};
+use vertex::result_utils::{Clock, MVCResult};
 
 fn main() {
     let args: Vec<String> = env::args().collect();

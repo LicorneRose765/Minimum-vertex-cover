@@ -9,8 +9,8 @@ use serde::{Deserialize, Serialize};
 use serde::de::Error;
 use serde_yaml::{Sequence, Value};
 
-use crate::ElapseTime;
 use crate::errors::{InvalidClqFileFormat, YamlError};
+use crate::result_utils::ElapseTime;
 
 /// Check if a given vertex cover is a vertex cover of a given graph.
 ///
