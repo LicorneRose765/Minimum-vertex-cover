@@ -6,7 +6,7 @@ use petgraph::prelude::UnGraphMap;
 
 use crate::Clock;
 use crate::graph_utils::{complement, copy_graph, get_vertex_with_max_degree};
-use crate::maxsat::{Clause, Literal, MaxSat};
+use crate::maxsat::encode_maxsat;
 
 pub fn b_and_b(_graph: &UnGraphMap<u64, ()>,
                g: &UnGraphMap<u64, ()>,
@@ -393,33 +393,6 @@ fn sat_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     graph.node_count() as u64 - p as u64 + nbr_of_inconsistent_subsets
 }
 
-fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxSat {
-    // 1. Each vertex is a variable
-    // 2. Each edge (i, j) form a hard clause not i or not j
-    // 3. Each clique (i, j, k) form a soft clause i or j or k.
-   
-    let mut maxsat = MaxSat::new();
-    
-    // 2 : each edge form a hard clause : not a or not b
-    for (a, b, _) in graph.all_edges() {
-        let mut clause = Clause::new();
-        clause.add_literal(Literal::Negative(a));
-        clause.add_literal(Literal::Negative(b));
-        maxsat.add_hard_clause(clause);
-    }
-    
-    // 3 : each clique form a soft clause : x_i OR x_j OR x_k OR ...
-    for clique in colors {
-        let mut clause = Clause::new();
-        for vertex in clique {
-            clause.add_literal(Literal::Positive(vertex));
-        }
-        maxsat.add_soft_clause(clause);
-    }
-    
-    maxsat
-}
-
 #[cfg(test)]
 mod branch_and_bound_tests {
     use crate::branch_and_bound;
@@ -518,8 +491,6 @@ mod branch_and_bound_tests {
         let colors = welch_powell(&graph).1;
         let maxsat = encode_maxsat(&graph, colors);
         
-        assert_eq!(maxsat.num_hard_clauses(), 5);
-        assert_eq!(maxsat.num_soft_clauses(), 3);
     }
 
     #[test]

@@ -1,21 +1,40 @@
+//! Module containing the structures and algorithms for the satLB lower bound of the BnB algorithm.
+//! This module can only be used in this context. Using the methods outside this algorithm may lead to unexpected results.
+//! 
+//! # Example
+//! Here is an example of the usage of this module : 
+//! ```rust
+//! use petgraph::prelude::UnGraphMap;
+//! use vertex::maxsat::encode_maxsat;
+//!
+//! let mut graph = UnGraphMap::<u64, ()>::new();
+//! for i in 0..4 {
+//!    graph.add_node(i);
+//! }
+//! graph.add_edge(0, 1, ());
+//! graph.add_edge(1, 2, ());
+//! graph.add_edge(2, 0, ());
+//! graph.add_edge(2, 3, ());
+//!
+//! let cliques = vec![vec![0, 1, 2], vec![3]];
+//!
+//! let mut formula = encode_maxsat(&graph, cliques);
+//! 
+//! let nbr_of_inconsistent_subsets = formula.find_inconsistent_subsets();
+//!```
 use std::collections::{HashSet, VecDeque};
 use std::hash::Hash;
+use petgraph::graphmap::UnGraphMap;
 
 /// A literal is a variable or its negation.
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
-pub enum Literal {
+enum Literal {
     Positive(u64),
     Negative(u64),
 }
 
 impl Literal {
-    pub fn is_positive(&self) -> bool {
-        match self {
-            Literal::Positive(_) => true,
-            Literal::Negative(_) => false,
-        }
-    }
-    
+    /// Return the negation of the literal.
     pub fn negation(&self) -> Self {
         match self {
             Literal::Positive(v) => Literal::Negative(*v),
@@ -24,9 +43,12 @@ impl Literal {
     }
 }
 
-/// A clause is a disjunction of literals.
+/// Structure representing a clause in the MaxSat instance. A clause is a disjunction of literals. (l_1 OR l_2 OR ... OR l_n)
+/// 
+/// A clause can be a hard clause or a soft clause. Hard clauses must be satisfied while soft clauses can be satisfied.
+/// Each clause has an id that is unique in the instance. Hard clauses have positive ids while soft clauses have negative ids.
 #[derive(Debug, Default, PartialEq, Eq)]
-pub struct Clause {
+struct Clause {
     literals: HashSet<Literal>,
     id: i64,
 }
@@ -36,14 +58,17 @@ impl Clause {
         Default::default()
     }
     
+    /// Returns the number of literals in the clause.
     pub fn size(&self) -> usize {
         self.literals.len()
     }
     
+    /// Returns the first literal in the clause. (Used to get the unit literal)
     pub fn get_first_literal(&self) -> Option<&Literal> {
         self.literals.iter().next()
     }
     
+    /// Returns the set of literals in the clause.
     pub fn get_literals(&self) -> &HashSet<Literal> {
         &self.literals
     }
@@ -68,18 +93,22 @@ impl Clause {
         self.size() == 1
     }
     
+    /// Get the id of the clause.
     pub fn get_id(&self) -> i64 {
         self.id
     }
     
+    /// Set the id of the clause.
     pub fn set_id(&mut self, id: i64) {
         self.id = id;
     }
     
+    /// Returns true if the clause is a soft clause. (Its id is negative)
     pub fn is_soft(&self) -> bool {
         self.id < 0
     }
     
+    /// Returns true if the clause contains the given literal.
     pub fn contains(&self, literal: &Literal) -> bool {
         self.literals.contains(literal)
     }
@@ -130,54 +159,66 @@ impl MaxSat{
         res
     }
     
+    /// Returns the hard clause with the given index in the list of hard clauses.
     fn get_hard_clause_by_idx(&self, idx: usize) -> Option<&Clause> {
         self.hard_clauses.get(idx)
     }
     
+    /// Returns the soft clause with the given index in the list of soft clauses.
     fn get_soft_clause_by_idx(&self, idx: usize) -> Option<&Clause> {
         self.soft_clauses.get(idx)
     }
     
+    /// Returns the soft clause with the given id.
     fn get_soft_clause_by_id(&self, id: i64) -> Option<&Clause> {
         self.soft_clauses.iter().find(|c| c.get_id() == id)
     }
     
-    pub fn get_soft_clauses(&self) -> &Vec<Clause> {
+    /// Returns the soft clauses of the MaxSat instance.
+    fn get_soft_clauses(&self) -> &Vec<Clause> {
         &self.soft_clauses
     }
     
     /// Adds a hard clause to the MaxSat instance.
-    pub fn add_hard_clause(&mut self, clause: Clause) {
+    fn add_hard_clause(&mut self, clause: Clause) {
         let mut clause = clause;
         clause.set_id(self.hard_clauses.len() as i64 + 1);
         self.hard_clauses.push(clause);
     }
     
-    pub fn remove_hard_clause(&mut self, clause: &Clause) {
+    /// Removes a hard clause from the MaxSat instance.
+    fn remove_hard_clause(&mut self, clause: &Clause) {
         self.hard_clauses.retain(|c| c != clause);
     }
     
     /// Adds a soft clause to the MaxSat instance.
-    pub fn add_soft_clause(&mut self, clause: Clause) {
+    fn add_soft_clause(&mut self, clause: Clause) {
         let mut clause = clause;
         clause.set_id(-(self.soft_clauses.len() as i64 + 1));
         self.soft_clauses.push(clause);
     }
     
-    pub fn remove_soft_clause(&mut self, clause: &Clause) {
+    /// Removes a soft clause from the MaxSat instance.
+    fn remove_soft_clause(&mut self, clause: &Clause) {
         self.soft_clauses.retain(|c| c != clause);
     }
     
     /// Returns the number of hard clauses.
-    pub fn num_hard_clauses(&self) -> usize {
+    #[allow(dead_code)]
+    fn num_hard_clauses(&self) -> usize {
         self.hard_clauses.len()
     }
     
     /// Returns the number of soft clauses.
-    pub fn num_soft_clauses(&self) -> usize {
+    #[allow(dead_code)]
+    fn num_soft_clauses(&self) -> usize {
         self.soft_clauses.len()
     }
     
+    /// Find the number of inconsistent subsets of soft clauses
+    /// 
+    /// This method is used in the satLB lower bound of the BnB algorithm. 
+    /// It can **only** be used on a MaxSat instance that has been encoded from a graph.
     pub fn find_inconsistent_subsets(&mut self) -> u64 {
         // Find the number of inconsistent subsets of soft clauses.
         let mut s = 0;
@@ -257,8 +298,9 @@ impl MaxSat{
         phi.unit_propagation()
     }
     
-    /// Perform unit propagation. If it results to an empty clause, 
-    /// return true
+    /// Perform unit propagation. 
+    /// 
+    /// If the propagation leads to an inconsistency, the method returns true and the set of soft clauses that have been used.
     fn unit_propagation(&mut self) -> (bool, HashSet<i64>) {
         let mut used_soft_clauses: HashSet<i64> = HashSet::new(); // Store the id of the soft clauses that have been propagated
         
@@ -290,6 +332,14 @@ impl MaxSat{
     }
 
     /// Propagates the given literal and returns true if the formula becomes inconsistent.
+    /// 
+    /// # Params
+    /// * `unit_stack` - The stack of unit clauses.
+    /// * `clause` - The clause to propagate.
+    /// * `soft_clause_used` - The set of soft clauses that have been used. (To add the new ones)
+    /// 
+    /// # Returns
+    /// True if the formula becomes inconsistent.
     fn propagate(&mut self, unit_stack: &mut VecDeque<Clause>, clause: &Clause, soft_clause_used: &mut HashSet<i64>) -> bool {
         // Propagate the unit clause.
         let literal = clause.get_first_literal().unwrap();
@@ -325,10 +375,7 @@ impl MaxSat{
         let clauses = self.soft_clauses.clone();
 
         for (i, clause) in clauses.iter().enumerate() {
-            if clause.contains(literal) && !clause.size() == 1 {
-                // The clause contains the literal, remove the clause.
-                self.remove_soft_clause(clause);
-            } else if clause.contains(&nliteral) {
+            if clause.contains(&nliteral) {
                 soft_clause_used.insert(clause.get_id());
                 // The clause contains the negation of the literal, remove the negation.
                 if self.remove_literal_from_soft_clause_idx(i, &nliteral) {
@@ -345,6 +392,65 @@ impl MaxSat{
         
         false
     }
+}
+
+/// Encodes a graph into a MaxSAT instance.
+/// 
+/// This encoding is as follows : 
+/// 1. Each vertex is a variable.
+/// 2. Each edge (i, j) form a hard clause (not i or not j).
+/// 3. Each clique (i, j,..., k) form a soft clause (i or j or ... or k).
+/// 
+/// # Arguments
+/// * `graph` - The graph to encode.
+/// * `colors` - The list of cliques in the graph. Each clique is a list of vertices.
+/// 
+/// # Returns
+/// A MaxSat instance representing the graph.
+/// 
+/// # Example
+/// ```rust
+/// use petgraph::prelude::UnGraphMap;
+/// use vertex::maxsat::encode_maxsat;
+///
+/// let mut graph = UnGraphMap::<u64, ()>::new();
+/// for i in 0..4 {
+///   graph.add_node(i);
+/// }
+/// graph.add_edge(0, 1, ());
+/// graph.add_edge(1, 2, ());
+/// graph.add_edge(2, 0, ());
+/// graph.add_edge(2, 3, ());
+///
+/// let cliques = vec![vec![0, 1, 2], vec![3]];
+/// let mut formula = encode_maxsat(&graph, cliques);
+/// // formula with 4 hard clauses and 2 soft clauses
+/// ```
+pub fn encode_maxsat(graph: &UnGraphMap<u64, ()>, colors: Vec<Vec<u64>>) -> MaxSat {
+    // 1. Each vertex is a variable
+    // 2. Each edge (i, j) form a hard clause not i or not j
+    // 3. Each clique (i, j, k) form a soft clause i or j or k.
+
+    let mut maxsat = MaxSat::new();
+
+    // 2 : each edge form a hard clause : not a or not b
+    for (a, b, _) in graph.all_edges() {
+        let mut clause = Clause::new();
+        clause.add_literal(Literal::Negative(a));
+        clause.add_literal(Literal::Negative(b));
+        maxsat.add_hard_clause(clause);
+    }
+
+    // 3 : each clique form a soft clause : x_i OR x_j OR x_k OR ...
+    for clique in colors {
+        let mut clause = Clause::new();
+        for vertex in clique {
+            clause.add_literal(Literal::Positive(vertex));
+        }
+        maxsat.add_soft_clause(clause);
+    }
+
+    maxsat
 }
 
 #[cfg(test)]
