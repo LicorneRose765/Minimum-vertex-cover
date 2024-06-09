@@ -37,7 +37,6 @@ pub fn numvc_algorithm(
             best_solution.clone_from(&solution);
             if optimal.is_some() && solution.len() <= optimal.unwrap() as usize {
                 // We found the optimal solution
-                println!("Found optimal solution with {} iterations", iter);
                 break;
             }
 
@@ -71,7 +70,6 @@ pub fn numvc_algorithm(
 
         iter += 1;
     }
-    println!("Number of iterations : {}", iter);
     best_solution
 }
 

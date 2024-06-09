@@ -11,11 +11,6 @@
   order: 23
   size: 71
   val: 21
-- id: HoG_660.clq
-  format: col
-  order: 10
-  size: 15
-  val: 8
 - id: queen5_5.clq
   format: col
   order: 25
@@ -271,3 +266,8 @@
   order: 18
   size: 45
   val: 15
+- id: HoG_660.clq
+  format: col
+  order: 10
+  size: 15
+  val: 8

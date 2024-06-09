@@ -398,6 +398,36 @@ HoG_660.clq:
   is_time_limit: false
   algorithm: clique
   comment: Welsh Powell algorithm
+- date: 2024-06-09 19:24:31
+  mvc_val: 8
+  time: 0min 0s 0ms 249µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 8
+  time: 0min 0s 1ms 470µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 8
+  time: 0min 0s 0ms 891µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 8
+  time: 0min 0s 0ms 4µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 8
+  time: 0min 0s 0ms 6µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_28.clq:
 - date: 2023-12-27 12:41:31
   mvc_val: 3
@@ -441,6 +471,36 @@ HoG_28.clq:
   is_time_limit: false
   algorithm: clique
   comment: Welsh Powell algorithm
+- date: 2024-06-09 19:24:31
+  mvc_val: 1
+  time: 0min 0s 0ms 263µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 1
+  time: 0min 0s 0ms 400µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 1
+  time: 0min 0s 0ms 364µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 1
+  time: 0min 0s 0ms 8µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 1
+  time: 0min 0s 0ms 6µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_92.clq:
 - date: 2023-12-27 12:55:38
   mvc_val: 5
@@ -460,6 +520,36 @@ HoG_92.clq:
   is_time_limit: false
   algorithm: clique
   comment: Welsh Powell algorithm
+- date: 2024-06-09 19:24:31
+  mvc_val: 5
+  time: 0min 0s 0ms 276µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 5
+  time: 0min 0s 0ms 855µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 5
+  time: 0min 0s 0ms 601µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 5
+  time: 0min 0s 0ms 2µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 5
+  time: 0min 0s 0ms 4µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_176.clq:
 - date: 2023-12-27 12:55:31
   mvc_val: 4
@@ -467,6 +557,36 @@ HoG_176.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-06-09 19:24:31
+  mvc_val: 4
+  time: 0min 0s 0ms 189µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 4
+  time: 0min 0s 0ms 955µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 4
+  time: 0min 0s 0ms 824µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 4
+  time: 0min 0s 0ms 1µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 4
+  time: 0min 0s 0ms 2µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_226.clq:
 - date: 2023-12-27 12:55:20
   mvc_val: 3
@@ -480,6 +600,36 @@ HoG_226.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-06-09 19:24:31
+  mvc_val: 3
+  time: 0min 0s 0ms 186µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 3
+  time: 0min 0s 0ms 586µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 3
+  time: 0min 0s 0ms 600µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 3
+  time: 0min 0s 0ms 1µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 3
+  time: 0min 0s 0ms 1µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_1171.clq:
 - date: 2023-12-27 18:01:10
   mvc_val: 50
@@ -499,6 +649,36 @@ HoG_1171.clq:
   is_time_limit: false
   algorithm: clique
   comment: Greedy algorithm
+- date: 2024-06-09 19:34:31
+  mvc_val: 0
+  time: 10min 0s 0ms 0µs
+  is_time_limit: true
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:40
+  mvc_val: 35
+  time: 0min 0s 704ms 770µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 35
+  time: 0min 0s 69ms 343µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 35
+  time: 0min 0s 0ms 41µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 35
+  time: 0min 0s 208ms 901µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_1190.clq:
 - date: 2023-12-27 16:56:51
   mvc_val: 3
@@ -524,6 +704,36 @@ HoG_1190.clq:
   is_time_limit: false
   algorithm: clique
   comment: Greedy algorithm
+- date: 2024-06-09 19:36:46
+  mvc_val: 27
+  time: 2min 14s 794ms 493µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:40
+  mvc_val: 27
+  time: 0min 0s 29ms 789µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 27
+  time: 0min 0s 3ms 424µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 27
+  time: 0min 0s 0ms 41µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 27
+  time: 0min 0s 0ms 46µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_1073.clq:
 - date: 2023-12-27 20:05:29
   mvc_val: 3
@@ -531,6 +741,36 @@ HoG_1073.clq:
   is_time_limit: false
   algorithm: naive_search
   comment: ''
+- date: 2024-06-09 19:24:31
+  mvc_val: 12
+  time: 0min 0s 2ms 732µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 12
+  time: 0min 0s 7ms 527µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 12
+  time: 0min 0s 1ms 229µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 12
+  time: 0min 0s 0ms 9µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 12
+  time: 0min 0s 0ms 12µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit
 HoG_1116.clq:
 - date: 2023-12-27 20:09:21
   mvc_val: 3
@@ -550,3 +790,33 @@ HoG_1116.clq:
   is_time_limit: false
   algorithm: clique
   comment: Greedy algorithm
+- date: 2024-06-09 19:24:31
+  mvc_val: 15
+  time: 0min 0s 23ms 411µs
+  is_time_limit: false
+  algorithm: naive_search
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:37:39
+  mvc_val: 15
+  time: 0min 0s 7ms 42µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - with satLB
+- date: 2024-06-09 19:38:51
+  mvc_val: 15
+  time: 0min 0s 2ms 33µs
+  is_time_limit: false
+  algorithm: branch and bound
+  comment: Final benchmark - 10 minutes time limit - without satLB
+- date: 2024-06-09 19:43:15
+  mvc_val: 15
+  time: 0min 0s 0ms 11µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 10 minutes time limit
+- date: 2024-06-09 19:44:00
+  mvc_val: 15
+  time: 0min 0s 41ms 792µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 10 minutes time limit

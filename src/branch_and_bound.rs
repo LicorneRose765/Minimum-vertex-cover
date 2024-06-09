@@ -95,25 +95,20 @@ fn compute_lb(graph: UnGraphMap<u64, ()>) -> u64 {
     // First thread : deg_lb
     let shared_deg = Arc::clone(&graph);
     let shared_clq = Arc::clone(&graph);
-    let shared_sat = Arc::clone(&graph);
+    //let shared_sat = Arc::clone(&graph);
     let handle_deg = std::thread::spawn(move || {
         deg_lb(&shared_deg)
     });
     let handle_clq = std::thread::spawn(move || {
         clq_lb(&shared_clq)
     });
-    let handle_sat = std::thread::spawn(move || {
-        sat_lb(&shared_sat)
-    });
+    // let handle_sat = std::thread::spawn(move || { sat_lb(&shared_sat) });
     
     let deg_lb = handle_deg.join().unwrap();
     let clq_lb = handle_clq.join().unwrap();
-    let sat_lb = handle_sat.join().unwrap();
+    // let sat_lb = handle_sat.join().unwrap();
     
-    if deg_lb > sat_lb && deg_lb > clq_lb {
-        println!("SAT LB : {}, CLQ_LB : {}, DEG_LB {}", sat_lb, clq_lb, deg_lb);
-    }
-    max(deg_lb, max(clq_lb, sat_lb))
+    max(deg_lb, clq_lb)
 }
 
 fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
