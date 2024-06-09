@@ -1,37 +1,30 @@
+//! Branch&Bound algorithm binary.
+//!
+//! Run the B&B algorithm on the given graph and print the result. 
+//!
+//! # Arguments
+//! * `graph_name` - Name of the graph file in the src/resources/graphs directory.
+//! * `time_limit` - Time limit in seconds.
+//! * `on complement` - Optional flag to run the algorithm on the complement of the graph.
+//!
+//! # Example
+//! This example will run the B&B algorithm on the complement of the queen5_5.clq graph for maximum 60 seconds.
+//! ```bash
+//! cargo run -r --bin bnb queen5_5.clq 60 -c
+//! ```
+
 use std::env;
 
-use vertex::{branch_and_bound, run_algorithm};
-use vertex::graph_utils::load_clq_file;
+use vertex::{branch_and_bound, read_arguments};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() >= 3 && args.len() <= 4{
-        let graph = load_clq_file(&format!("src/resources/graphs/{}", args[1]))
-            .expect("Error while loading graph");
-
-        let time_limit = match args[2].parse::<u64>() {
-            Ok(t) => t,
-            Err(_) => {
-                eprintln!("Error: time limit must be a positive integer");
-                eprintln!("Usage: cargo run [-r] --bin bnb <graph_name> <time_limit> [(on complement) -c]");
-                return;
-            }
-        };
-
-
-        if args.len() == 4 && args[3] == "-c" {
-            match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, true, false) {
-                Ok(res) => println!("Result : {}", res),
-                Err(e) => println!("Error : {}", e),
-            }
-            return;
-        }
-
-        match run_algorithm(&args[1], &graph, &branch_and_bound, None, time_limit, false, false) {
-            Ok(res) => println!("Result : {}", res),
-            Err(e) => println!("Error : {}", e),
-        };
-        return
+    let res = read_arguments(args, &branch_and_bound);
+    
+    if res.is_none() {
+        eprintln!("Usage: cargo run [-r] --bin bnb <graph_name> <time_limit> [(on complement) -c]");
+        return;
     }
-    eprintln!("Usage: cargo run [-r] --bin bnb <graph_name> <time_limit> [(on complement) -c]");
+    let res = res.unwrap();
+    println!("Result : {}", res);
 }

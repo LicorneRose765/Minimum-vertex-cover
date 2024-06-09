@@ -100,12 +100,21 @@ impl MVCResult {
     pub fn new(graph_id: String, value: u64, mvc: Vec<u64>, time: ElapseTime, is_time_limit: bool, is_compl: bool, is_clq: bool) -> Result<MVCResult, YamlError> {
         let is_optimal = if is_compl {
             if is_clq {
-                is_optimal_value(&graph_id, value, Some("src/resources/clique_data.yml"))?
+                is_optimal_value(&graph_id, value, Some("src/resources/clique_data.yml"))
             } else {
-                is_optimal_value(&graph_id, value, Some("src/resources/compl_data.yml"))?
+                is_optimal_value(&graph_id, value, Some("src/resources/compl_data.yml"))
             }
         } else {
-            is_optimal_value(&graph_id, value, None)?
+            is_optimal_value(&graph_id, value, None)
+        };
+        let is_optimal = match is_optimal {
+            Ok(x) => x,
+            Err(e) => {
+                match e {
+                    YamlError::NotFound(_, _) => None,
+                    _ => { return Err(e);}
+                }
+            }
         };
         Ok(MVCResult {
             graph_id,
@@ -125,6 +134,7 @@ impl Display for MVCResult {
         // TODO: modify here to handle unknown graph in the yaml file
         let opt_message = {
             if self.is_optimal.is_some() {
+                // If the graph was found in the yaml file
                 if self.is_optimal.unwrap() {
                     "\t The value is optimal (as long as the data is correct in the yaml file)".to_string()
                 } else {

@@ -1,3 +1,6 @@
+//! This binary is used to update the graph_data.yml and time_result.yml files with the information of the graphs in the
+//! folder src/resources/graphs. 
+//! It will iterate over all graphs and the folder and add them to the yaml files if they are not already present.
 use std::fs::read_dir;
 
 use vertex::graph_utils::{add_graph_to_yaml, load_clq_file};

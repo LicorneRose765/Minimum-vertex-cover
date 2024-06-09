@@ -1,3 +1,18 @@
+//! Find the value of the maximum clique.
+//!
+//! Run the B&B algorithm on the given graph and print the value of the maximum clique. 
+//!
+//! # Arguments
+//! * `graph_name` - Name of the graph file in the src/resources/graphs directory.
+//! * `time_limit` - Time limit in seconds.
+//! * `on complement` - Optional flag to run the algorithm on the complement of the graph.
+//!
+//! # Example
+//! This example will run find the maximum clique of the queen5_5.clq graph using the branch and bound algorithm.
+//! The search cannot take more than 60 seconds.
+//! ```bash
+//! cargo run -r --bin clique queen5_5.clq 60
+//! ```
 use std::env;
 
 use petgraph::prelude::UnGraphMap;

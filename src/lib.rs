@@ -19,6 +19,67 @@ mod mvcgraph;
 /// Type alias for an algorithm that takes an UnGraphMap as input and computes the minimum vertex cover of the graph.
 type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option<u64>) -> (u64, Vec<u64>);
 
+/// Read the command line arguments given as parameters and run the algorithm based on the given arguments.
+///
+/// # Arguments
+/// * `args` - The command line arguments given to the program. (These can be accessed using `env::args().collect()`)
+/// * `algorithm` - The algorithm to run on the graph.
+///
+/// # Returns
+/// * `Some(MVCResult)` - The result of the algorithm if the arguments are correct.
+/// * `None` - If the arguments are incorrect. The error message is printed to the standard error and None is returned.
+///
+/// # Example
+/// ```rust
+/// use std::env;
+/// use vertex::{read_arguments, branch_and_bound};
+/// 
+/// let args: Vec<String> = env::args().collect(); 
+/// let res = read_arguments(args, &branch_and_bound);
+/// if res.is_none() { 
+///     eprintln!("Usage: cargo run [-r] --bin bnb <graph_name> <time_limit> [(on complement) -c]");
+///     return;
+/// }
+/// let res = res.unwrap();
+/// println!("Result : {}", res);
+/// ```
+pub fn read_arguments(args: Vec<String>, algorithm: &Algorithm) -> Option<MVCResult> {
+    if args.len() >= 3 && args.len() <= 4 {
+        let graph = graph_utils::load_clq_file(&format!("src/resources/graphs/{}", args[1]))
+            .expect("Error while loading graph");
+
+        let time_limit = match args[2].parse::<u64>() {
+            Ok(t) => t,
+            Err(_) => {
+                eprintln!("Error: time limit must be a positive integer");
+                return None;
+            }
+        };
+
+        if args.len() == 4 && args[3] == "-c" {
+            let res = match run_algorithm(&args[1], &graph, algorithm, None, time_limit, true, false) {
+                Ok(res) => res,
+                Err(e) => {
+                    println!("Error : {}", e);
+                    return None;
+                }
+            };
+            return Some(res);
+        }
+
+        let res = match run_algorithm(&args[1], &graph, algorithm, None, time_limit, false, false) {
+            Ok(res) => res,
+            Err(e) => {
+                println!("Error : {}", e);
+                return None;
+            }
+        };
+        Some(res)
+    } else {
+        None
+    }
+}
+
 /// Naïve algorithm that searches for the minimum vertex cover of a given graph.
 ///
 /// The algorithm list all possible subsets of the vertices of the graph and check if each
