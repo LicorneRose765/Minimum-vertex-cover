@@ -45,6 +45,7 @@ type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option
 /// ```
 pub fn read_arguments(args: Vec<String>, algorithm: &Algorithm) -> Option<MVCResult> {
     if args.len() >= 3 && args.len() <= 4 {
+        // TODO: Add a check if the graph is from the folder or not.
         let graph = graph_utils::load_clq_file(&format!("src/resources/graphs/{}", args[1]))
             .expect("Error while loading graph");
 

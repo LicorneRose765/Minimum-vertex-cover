@@ -365,6 +365,7 @@ fn welch_powell(graph: &UnGraphMap<u64, ()>) -> (Vec<usize>, Vec<Vec<u64>>) {
 
 
 // ====================== SATLB ======================
+#[allow(dead_code)]
 fn sat_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
     // :(
     
