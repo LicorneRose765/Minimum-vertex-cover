@@ -17,7 +17,7 @@ fn main() {
 
 
     let algorithm = &branch_and_bound;
-    let algorithm_str = "Branch and Bound (without satLB)";
+    let algorithm_str = "Branch and Bound (with satLB)";
     let on_complement = true;
     let time_limit = 1800; // 30 minutes time limit
 
@@ -36,7 +36,7 @@ fn main() {
         match res {
             Ok(res) => {
                 println!("Result : {}", res);
-                let comment = "Final benchmark - 30 minutes time limit - without satLB";
+                let comment = "Final benchmark - 30 minutes time limit - with satLB";
                 match add_time_to_yaml(&res.graph_id,
                                        res.value,
                                        res.time,

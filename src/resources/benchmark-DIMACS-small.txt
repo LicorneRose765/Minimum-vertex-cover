@@ -1,9 +1,9 @@
 # Graphs with ~ < 1000 nodes. More than that makes my computer crash with the branch and bound (too much memory usage)
-#C1000.9.clq -> modify
-#C125.9.clq -> modify
+C1000.9.clq
+C125.9.clq
 #C2000.5.clq
 #C2000.9.clq
-#C250.9.clq -> modify
+C250.9.clq
 #C4000.5.clq
 C500.9.clq
 MANN_a27.clq

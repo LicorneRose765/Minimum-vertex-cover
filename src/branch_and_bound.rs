@@ -109,6 +109,7 @@ fn compute_lb(graph: UnGraphMap<u64, ()>) -> u64 {
     // let sat_lb = handle_sat.join().unwrap();
     
     max(deg_lb, clq_lb)
+    //max(deg_lb, max(clq_lb, sat_lb))
 }
 
 fn deg_lb(graph: &UnGraphMap<u64, ()>) -> u64 {
