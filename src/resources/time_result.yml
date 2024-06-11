@@ -136,6 +136,12 @@ brock200_2.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 13:01:30
+  mvc_val: 188
+  time: 3min 54s 926ms 820µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 brock200_4.clq:
 - date: 2023-12-13 14:00:03
   mvc_val: 17
@@ -179,6 +185,12 @@ brock200_4.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 13:05:49
+  mvc_val: 183
+  time: 4min 18s 919ms 251µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 brock400_2.clq:
 - date: 2024-06-10 14:24:07
   mvc_val: 376
@@ -192,6 +204,12 @@ brock400_2.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 13:35:49
+  mvc_val: 375
+  time: 30min 0s 0ms 9µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 brock400_4.clq:
 - date: 2024-06-10 14:54:07
   mvc_val: 376
@@ -205,6 +223,12 @@ brock400_4.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 13:42:40
+  mvc_val: 367
+  time: 6min 50s 187ms 734µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 brock800_2.clq:
 - date: 2024-06-10 15:24:10
   mvc_val: 781
@@ -218,6 +242,12 @@ brock800_2.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:12:40
+  mvc_val: 779
+  time: 30min 0s 0ms 129µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 brock800_4.clq:
 - date: 2024-06-10 15:54:14
   mvc_val: 781
@@ -231,6 +261,12 @@ brock800_4.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:40
+  mvc_val: 779
+  time: 30min 0s 0ms 216µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 C125.9.clq:
 - date: 2023-12-13 14:01:09
   mvc_val: 34
@@ -310,6 +346,12 @@ C125.9.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 10:56:25
+  mvc_val: 91
+  time: 0min 0s 0ms 231µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 C250.9.clq:
 - date: 2024-05-26 21:11:12
   mvc_val: 207
@@ -359,6 +401,12 @@ C250.9.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 11:27:20
+  mvc_val: 206
+  time: 0min 0s 2ms 929µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 C500.9.clq:
 - date: 2024-06-10 12:53:30
   mvc_val: 451
@@ -372,6 +420,12 @@ C500.9.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 11:57:32
+  mvc_val: 443
+  time: 0min 1s 447ms 791µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 C1000.9.clq:
 - date: 2024-06-02 20:03:02
   mvc_val: 935
@@ -397,10 +451,22 @@ C1000.9.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 10:56:25
+  mvc_val: 932
+  time: 3min 20s 606ms 267µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 C2000.5.clq:
 - date: 2024-06-10 22:12:53
   mvc_val: 1984
   time: 8min 13s 756ms 394µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 10:57:19
+  mvc_val: 1984
+  time: 0min 51s 684ms 899µs
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
@@ -411,7 +477,19 @@ C2000.9.clq:
   is_time_limit: true
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
-C4000.5.clq: null
+- date: 2024-06-11 11:27:20
+  mvc_val: 1924
+  time: 30min 0s 0ms 182µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+C4000.5.clq:
+- date: 2024-06-11 11:57:30
+  mvc_val: 3983
+  time: 30min 0s 12ms 466µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 gen200_p0.9_44.clq:
 - date: 2024-06-10 16:24:14
   mvc_val: 157
@@ -425,6 +503,12 @@ gen200_p0.9_44.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:40
+  mvc_val: 156
+  time: 0min 0s 17ms 680µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 gen200_p0.9_55.clq:
 - date: 2024-06-10 16:26:41
   mvc_val: 145
@@ -438,6 +522,12 @@ gen200_p0.9_55.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:40
+  mvc_val: 145
+  time: 0min 0s 1ms 82µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_55.clq:
 - date: 2024-06-10 16:56:41
   mvc_val: 351
@@ -451,6 +541,12 @@ gen400_p0.9_55.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:41
+  mvc_val: 345
+  time: 0min 1s 504ms 757µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_65.clq:
 - date: 2024-06-10 17:26:41
   mvc_val: 353
@@ -464,6 +560,12 @@ gen400_p0.9_65.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:42
+  mvc_val: 335
+  time: 0min 0s 9ms 411µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_75.clq:
 - date: 2024-06-10 17:56:42
   mvc_val: 346
@@ -477,6 +579,12 @@ gen400_p0.9_75.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:42
+  mvc_val: 325
+  time: 0min 0s 14ms 187µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 hamming8-4.clq:
 - date: 2024-06-10 18:27:06
   mvc_val: 240
@@ -490,6 +598,12 @@ hamming8-4.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:44
+  mvc_val: 240
+  time: 0min 0s 6ms 985µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 hamming10-4.clq:
 - date: 2024-06-10 18:26:44
   mvc_val: 990
@@ -503,6 +617,12 @@ hamming10-4.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:44
+  mvc_val: 984
+  time: 0min 2s 240ms 723µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 keller4.clq:
 - date: 2024-04-27 18:50:59
   mvc_val: 11
@@ -606,6 +726,12 @@ keller4.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 14:42:44
+  mvc_val: 160
+  time: 0min 0s 2ms 152µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 keller5.clq:
 - date: 2024-06-10 18:57:19
   mvc_val: 756
@@ -619,7 +745,19 @@ keller5.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
-keller6.clq: null
+- date: 2024-06-11 14:42:44
+  mvc_val: 749
+  time: 0min 0s 292ms 581µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+keller6.clq:
+- date: 2024-06-11 15:12:49
+  mvc_val: 3304
+  time: 30min 0s 1ms 80µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 MANN_a27.clq:
 - date: 2024-06-10 13:23:30
   mvc_val: 252
@@ -633,6 +771,12 @@ MANN_a27.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 11:57:32
+  mvc_val: 252
+  time: 0min 0s 14ms 985µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 MANN_a45.clq:
 - date: 2024-06-10 13:53:30
   mvc_val: 702
@@ -646,7 +790,19 @@ MANN_a45.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
-MANN_a81.clq: null
+- date: 2024-06-11 12:27:32
+  mvc_val: 691
+  time: 30min 0s 0ms 2µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+MANN_a81.clq:
+- date: 2024-06-11 12:57:35
+  mvc_val: 2223
+  time: 30min 0s 0ms 23µs
+  is_time_limit: true
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat300-1.clq:
 - date: 2024-06-10 18:57:22
   mvc_val: 292
@@ -660,6 +816,12 @@ p_hat300-1.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:53
+  mvc_val: 292
+  time: 0min 0s 82ms 610µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat300-2.clq:
 - date: 2024-06-10 18:57:31
   mvc_val: 275
@@ -673,6 +835,12 @@ p_hat300-2.clq:
   is_time_limit: false
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:53
+  mvc_val: 275
+  time: 0min 0s 26ms 946µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat300-3.clq:
 - date: 2024-06-10 19:08:38
   mvc_val: 264
@@ -686,6 +854,12 @@ p_hat300-3.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:53
+  mvc_val: 264
+  time: 0min 0s 25ms 970µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat700-1.clq:
 - date: 2024-06-10 19:09:52
   mvc_val: 689
@@ -699,6 +873,12 @@ p_hat700-1.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:53
+  mvc_val: 689
+  time: 0min 0s 533ms 848µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat700-2.clq:
 - date: 2024-06-10 19:39:56
   mvc_val: 656
@@ -712,6 +892,12 @@ p_hat700-2.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:54
+  mvc_val: 656
+  time: 0min 0s 452ms 173µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat700-3.clq:
 - date: 2024-06-10 20:09:57
   mvc_val: 639
@@ -725,9 +911,33 @@ p_hat700-3.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
-p_hat1500-1.clq: null
-p_hat1500-2.clq: null
-p_hat1500-3.clq: null
+- date: 2024-06-11 15:26:54
+  mvc_val: 638
+  time: 0min 0s 122ms 496µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+p_hat1500-1.clq:
+- date: 2024-06-11 15:26:39
+  mvc_val: 1488
+  time: 13min 48s 100ms 483µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+p_hat1500-2.clq:
+- date: 2024-06-11 15:26:45
+  mvc_val: 1435
+  time: 0min 5s 348ms 570µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+p_hat1500-3.clq:
+- date: 2024-06-11 15:26:52
+  mvc_val: 1406
+  time: 0min 6s 933ms 993µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 oui.clq: []
 test_cycle_5.clq: []
 test_welsh.clq: []
@@ -744,6 +954,12 @@ DSJC500.5.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:26:55
+  mvc_val: 487
+  time: 0min 0s 455ms 837µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 DSJC1000.5.clq:
 - date: 2024-06-10 20:52:48
   mvc_val: 986
@@ -757,6 +973,12 @@ DSJC1000.5.clq:
   is_time_limit: true
   algorithm: Branch and Bound (with satLB)
   comment: Final benchmark - 30 minutes time limit - with satLB
+- date: 2024-06-11 15:30:49
+  mvc_val: 985
+  time: 3min 53s 461ms 966µs
+  is_time_limit: false
+  algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
 HoG_660.clq:
 - date: 2023-12-27 19:23:34
   mvc_val: 2
