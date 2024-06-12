@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["branch_and_bound","naive_search","numvc","read_arguments","run_algorithm","samvc"],"mod":["errors","graph_utils","maxsat","result_utils"]};
