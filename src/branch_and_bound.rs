@@ -95,7 +95,7 @@ fn compute_lb(graph: UnGraphMap<u64, ()>) -> u64 {
     // First thread : deg_lb
     let shared_deg = Arc::clone(&graph);
     let shared_clq = Arc::clone(&graph);
-    //let shared_sat = Arc::clone(&graph);
+    // let shared_sat = Arc::clone(&graph);
     let handle_deg = std::thread::spawn(move || {
         deg_lb(&shared_deg)
     });

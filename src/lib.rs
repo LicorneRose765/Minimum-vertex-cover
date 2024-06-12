@@ -45,9 +45,24 @@ type Algorithm = dyn Fn(&UnGraphMap<u64, ()>, &mut Clock, Option<&[f64]>, Option
 /// ```
 pub fn read_arguments(args: Vec<String>, algorithm: &Algorithm) -> Option<MVCResult> {
     if args.len() >= 3 && args.len() <= 4 {
-        // TODO: Add a check if the graph is from the folder or not.
-        let graph = graph_utils::load_clq_file(&format!("src/resources/graphs/{}", args[1]))
-            .expect("Error while loading graph");
+        let graph = if args[1].contains('/') {
+            match graph_utils::load_clq_file(&args[1]) {
+                Ok(g) => g,
+                Err(e) => {
+                    eprintln!("Error when loading the graph: {}", e);
+                    return None;
+                }
+            }
+        } else {
+            match graph_utils::load_clq_file(&format!("src/resources/graphs/{}", args[1])) {
+                Ok(g) => g,
+                Err(e) => {
+                    eprintln!("Error when loading the graph: {}", e);
+                    return None;
+                }
+            }
+        };
+        
 
         let time_limit = match args[2].parse::<u64>() {
             Ok(t) => t,
@@ -320,7 +335,7 @@ pub fn samvc(graph: &UnGraphMap<u64, ()>, clock: &mut Clock, params: Option<&[f6
 
     let mut call = 0;
     clock.restart();
-    while call < max_call {
+    while !clock.is_time_up() && call < max_call {
         // Call the algorithm max_call time without improvement
         
         let res = if best_solution.is_empty() {

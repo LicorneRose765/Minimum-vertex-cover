@@ -2,12 +2,12 @@ use std::fs::File;
 use std::io::BufRead;
 use std::ops::Add;
 
-use vertex::{numvc, run_algorithm};
+use vertex::{run_algorithm, samvc};
 use vertex::graph_utils::add_time_to_yaml;
 
 fn main() {
     // Read all lines of benchmark-HoG.txt and put it in a vector
-    let file = File::open("src/resources/benchmark-DIMACS.txt").unwrap();
+    let file = File::open("src/resources/benchmark-DIMACS-big.txt").unwrap();
     let reader = std::io::BufReader::new(file);
     // Read all lines not starting with #
     let lines: Vec<String> = reader.lines()
@@ -16,8 +16,8 @@ fn main() {
         .collect();
 
 
-    let algorithm = &numvc;
-    let algorithm_str = "NuMVC";
+    let algorithm = &samvc;
+    let algorithm_str = "SAMVC";
     let on_complement = true;
     let time_limit = 1800; // 30 minutes time limit
 

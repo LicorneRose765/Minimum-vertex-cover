@@ -142,6 +142,12 @@ brock200_2.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 17:05:26
+  mvc_val: 189
+  time: 5min 25s 92ms 550µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 brock200_4.clq:
 - date: 2023-12-13 14:00:03
   mvc_val: 17
@@ -191,6 +197,12 @@ brock200_4.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 17:09:05
+  mvc_val: 184
+  time: 3min 38s 884ms 573µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 brock400_2.clq:
 - date: 2024-06-10 14:24:07
   mvc_val: 376
@@ -209,6 +221,12 @@ brock400_2.clq:
   time: 30min 0s 0ms 9µs
   is_time_limit: true
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 17:28:25
+  mvc_val: 375
+  time: 19min 20s 95ms 684µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 brock400_4.clq:
 - date: 2024-06-10 14:54:07
@@ -229,6 +247,12 @@ brock400_4.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 17:48:51
+  mvc_val: 375
+  time: 20min 25s 626ms 867µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 brock800_2.clq:
 - date: 2024-06-10 15:24:10
   mvc_val: 781
@@ -248,6 +272,12 @@ brock800_2.clq:
   is_time_limit: true
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 18:55:53
+  mvc_val: 780
+  time: 30min 0s 16ms 281µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 brock800_4.clq:
 - date: 2024-06-10 15:54:14
   mvc_val: 781
@@ -266,6 +296,12 @@ brock800_4.clq:
   time: 30min 0s 0ms 216µs
   is_time_limit: true
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:25:53
+  mvc_val: 781
+  time: 30min 0s 17ms 620µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 C125.9.clq:
 - date: 2023-12-13 14:01:09
@@ -352,6 +388,12 @@ C125.9.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 15:59:53
+  mvc_val: 91
+  time: 0min 47s 477ms 333µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 C250.9.clq:
 - date: 2024-05-26 21:11:12
   mvc_val: 207
@@ -407,6 +449,12 @@ C250.9.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 16:00:14
+  mvc_val: 206
+  time: 0min 20s 264ms 434µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 C500.9.clq:
 - date: 2024-06-10 12:53:30
   mvc_val: 451
@@ -425,6 +473,12 @@ C500.9.clq:
   time: 0min 1s 447ms 791µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 16:21:11
+  mvc_val: 444
+  time: 20min 56s 966ms 789µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 C1000.9.clq:
 - date: 2024-06-02 20:03:02
@@ -457,6 +511,12 @@ C1000.9.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 22:51:14
+  mvc_val: 933
+  time: 30min 0s 10ms 220µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 C2000.5.clq:
 - date: 2024-06-10 22:12:53
   mvc_val: 1984
@@ -469,6 +529,12 @@ C2000.5.clq:
   time: 0min 51s 684ms 899µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 23:21:15
+  mvc_val: 1990
+  time: 30min 0s 363ms 262µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 C2000.9.clq:
 - date: 2024-06-10 22:42:55
@@ -483,12 +549,24 @@ C2000.9.clq:
   is_time_limit: true
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 23:51:17
+  mvc_val: 1944
+  time: 30min 0s 70ms 736µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 C4000.5.clq:
 - date: 2024-06-11 11:57:30
   mvc_val: 3983
   time: 30min 0s 12ms 466µs
   is_time_limit: true
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 00:21:25
+  mvc_val: 3988
+  time: 30min 2s 892ms 388µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 gen200_p0.9_44.clq:
 - date: 2024-06-10 16:24:14
@@ -509,6 +587,12 @@ gen200_p0.9_44.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:25:56
+  mvc_val: 156
+  time: 0min 3s 349ms 949µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 gen200_p0.9_55.clq:
 - date: 2024-06-10 16:26:41
   mvc_val: 145
@@ -527,6 +611,12 @@ gen200_p0.9_55.clq:
   time: 0min 0s 1ms 82µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:25:59
+  mvc_val: 145
+  time: 0min 3s 205ms 94µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_55.clq:
 - date: 2024-06-10 16:56:41
@@ -547,6 +637,12 @@ gen400_p0.9_55.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:27:31
+  mvc_val: 345
+  time: 1min 31s 235ms 38µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_65.clq:
 - date: 2024-06-10 17:26:41
   mvc_val: 353
@@ -565,6 +661,12 @@ gen400_p0.9_65.clq:
   time: 0min 0s 9ms 411µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:27:52
+  mvc_val: 335
+  time: 0min 21s 714ms 224µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 gen400_p0.9_75.clq:
 - date: 2024-06-10 17:56:42
@@ -585,6 +687,12 @@ gen400_p0.9_75.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:28:16
+  mvc_val: 325
+  time: 0min 23s 238ms 152µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 hamming8-4.clq:
 - date: 2024-06-10 18:27:06
   mvc_val: 240
@@ -604,6 +712,12 @@ hamming8-4.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:58:37
+  mvc_val: 240
+  time: 0min 21s 444ms 612µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 hamming10-4.clq:
 - date: 2024-06-10 18:26:44
   mvc_val: 990
@@ -622,6 +736,12 @@ hamming10-4.clq:
   time: 0min 2s 240ms 723µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:58:16
+  mvc_val: 986
+  time: 30min 0s 17ms 588µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 keller4.clq:
 - date: 2024-04-27 18:50:59
@@ -732,6 +852,12 @@ keller4.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 19:59:49
+  mvc_val: 160
+  time: 1min 11s 758ms 834µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 keller5.clq:
 - date: 2024-06-10 18:57:19
   mvc_val: 756
@@ -751,12 +877,24 @@ keller5.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 20:11:20
+  mvc_val: 749
+  time: 11min 31s 72ms 543µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 keller6.clq:
 - date: 2024-06-11 15:12:49
   mvc_val: 3304
   time: 30min 0s 1ms 80µs
   is_time_limit: true
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 01:21:33
+  mvc_val: 3326
+  time: 30min 0s 673ms 219µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 MANN_a27.clq:
 - date: 2024-06-10 13:23:30
@@ -777,6 +915,12 @@ MANN_a27.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 16:51:11
+  mvc_val: 261
+  time: 30min 0s 0ms 373µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 MANN_a45.clq:
 - date: 2024-06-10 13:53:30
   mvc_val: 702
@@ -796,12 +940,24 @@ MANN_a45.clq:
   is_time_limit: true
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 17:00:01
+  mvc_val: 705
+  time: 8min 49s 976ms 716µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 MANN_a81.clq:
 - date: 2024-06-11 12:57:35
   mvc_val: 2223
   time: 30min 0s 0ms 23µs
   is_time_limit: true
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 00:51:29
+  mvc_val: 2241
+  time: 30min 0s 2ms 92µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 p_hat300-1.clq:
 - date: 2024-06-10 18:57:22
@@ -822,6 +978,12 @@ p_hat300-1.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 20:12:35
+  mvc_val: 292
+  time: 1min 14s 399ms 544µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat300-2.clq:
 - date: 2024-06-10 18:57:31
   mvc_val: 275
@@ -840,6 +1002,12 @@ p_hat300-2.clq:
   time: 0min 0s 26ms 946µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 20:14:08
+  mvc_val: 275
+  time: 1min 33s 799ms 256µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 p_hat300-3.clq:
 - date: 2024-06-10 19:08:38
@@ -860,6 +1028,12 @@ p_hat300-3.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 20:14:33
+  mvc_val: 264
+  time: 0min 24s 561ms 940µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat700-1.clq:
 - date: 2024-06-10 19:09:52
   mvc_val: 689
@@ -878,6 +1052,12 @@ p_hat700-1.clq:
   time: 0min 0s 533ms 848µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 20:30:43
+  mvc_val: 689
+  time: 16min 9s 423ms 352µs
+  is_time_limit: false
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 p_hat700-2.clq:
 - date: 2024-06-10 19:39:56
@@ -898,6 +1078,12 @@ p_hat700-2.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 21:00:43
+  mvc_val: 660
+  time: 30min 0s 15ms 9µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat700-3.clq:
 - date: 2024-06-10 20:09:57
   mvc_val: 639
@@ -917,12 +1103,24 @@ p_hat700-3.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 21:25:22
+  mvc_val: 638
+  time: 24min 39s 220ms 561µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat1500-1.clq:
 - date: 2024-06-11 15:26:39
   mvc_val: 1488
   time: 13min 48s 100ms 483µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 01:51:34
+  mvc_val: 1491
+  time: 30min 0s 219ms 107µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 p_hat1500-2.clq:
 - date: 2024-06-11 15:26:45
@@ -931,12 +1129,24 @@ p_hat1500-2.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 02:21:34
+  mvc_val: 1445
+  time: 30min 0s 127ms 604µs
+  is_time_limit: true
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 p_hat1500-3.clq:
 - date: 2024-06-11 15:26:52
   mvc_val: 1406
   time: 0min 6s 933ms 993µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-12 02:51:35
+  mvc_val: 1420
+  time: 30min 0s 64ms 330µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 oui.clq: []
 test_cycle_5.clq: []
@@ -960,6 +1170,12 @@ DSJC500.5.clq:
   is_time_limit: false
   algorithm: NuMVC
   comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 21:49:20
+  mvc_val: 487
+  time: 23min 58s 273ms 188µs
+  is_time_limit: false
+  algorithm: SAMVC
+  comment: Final benchmark - 30 minutes time limit
 DSJC1000.5.clq:
 - date: 2024-06-10 20:52:48
   mvc_val: 986
@@ -978,6 +1194,12 @@ DSJC1000.5.clq:
   time: 3min 53s 461ms 966µs
   is_time_limit: false
   algorithm: NuMVC
+  comment: Final benchmark - 30 minutes time limit
+- date: 2024-06-11 22:19:21
+  mvc_val: 986
+  time: 30min 0s 50ms 760µs
+  is_time_limit: true
+  algorithm: SAMVC
   comment: Final benchmark - 30 minutes time limit
 HoG_660.clq:
 - date: 2023-12-27 19:23:34
