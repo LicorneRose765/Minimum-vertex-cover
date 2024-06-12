@@ -34,6 +34,8 @@ use : `cargo run -r --bin bnb <file_name> <time_limit> [-c]`
 * NuMVC : Algorithm proposed by Cai et al. in their paper : __NuMVC: An Efficient Algorithm for the Minimum Vertex Cover Problem__.
 You can find the paper [here](	https://doi.org/10.1613/jair.3907)  
 use :`cargo run -r --bin numvc <file_name> <time_limit> [-c]` 
+* SAMVC : Algorithm based on the simulated annealing algorithm.  
+use : `cargo run -r --bin samvc <file_name> <time_limit> [-c]`
 
 
 ## Bins 
@@ -47,3 +49,5 @@ use : `cargo run -r --bin bnb <file_name> [-c]`
 use : `cargo run -r --bin clique <file_name>`
 * **numvc**: Find the MVC of the graph (or the complement if -c is added) using the NuMVC algorithm.  
 use: `cargo run -r --bin numvc <file_name> <time_limit> [-c]`
+* **samvc**: Find the MVC of the graph (or the complement if -c is added) using the Simulated Annealing algorithm.  
+use: `cargo run -r --bin samvc <file_name> <time_limit> [-c]`
